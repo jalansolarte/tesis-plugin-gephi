@@ -6,6 +6,8 @@
 package co.edu.usbcali.ultimateGraphViewer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -236,6 +238,11 @@ public class UGVPanel extends TopComponent {
         org.openide.awt.Mnemonics.setLocalizedText(btnLimpiarFiltros, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.btnLimpiarFiltros.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(btnAplicarFiltros, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.btnAplicarFiltros.text")); // NOI18N
+        btnAplicarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAplicarFiltrosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -307,6 +314,62 @@ public class UGVPanel extends TopComponent {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAplicarVisualizacionActionPerformed
 
+    private void btnAplicarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarFiltrosActionPerformed
+        // TODO add your handling code here:
+        List<String> filtros = validarFiltros();
+    }//GEN-LAST:event_btnAplicarFiltrosActionPerformed
+
+    public List<String> validarFiltros(){
+        
+        List<String> filtros = new ArrayList<>();
+        
+        //Comunidades
+        String masNodos = txtMasNodos.getText();
+        String menosNodos = txtMenosNodos.getText();
+        
+        if(!masNodos.isEmpty() && !masNodos.equals("")){
+            filtros.add(masNodos);
+        }
+        if(!menosNodos.isEmpty() && !menosNodos.equals("")){
+            filtros.add(menosNodos);
+        }
+        
+        //Nodos
+        String conTags = txtConTags.getText();
+        String sinTags = txtSinTags.getText();
+        String masComunidades = txtMasComunidades.getText();
+        String menosComunidades = txtMenosComunidades.getText();
+        
+        if(!conTags.isEmpty() && !conTags.equals("")){
+            filtros.add(conTags);
+        }
+        if(!sinTags.isEmpty() && !sinTags.equals("")){
+            filtros.add(sinTags);
+        }
+        if(!masComunidades.isEmpty() && !masComunidades.equals("")){
+            filtros.add(masComunidades);
+        }
+        if(!menosComunidades.isEmpty() && !menosComunidades.equals("")){
+            filtros.add(menosComunidades);
+        }
+        
+        //Aristas
+        String pesoMayor = txtMasPeso.getText();
+        String pesoMenor = txtMenosPeso.getText();
+        
+        if(!pesoMayor.isEmpty() && !pesoMayor.equals("")){
+            filtros.add(pesoMayor);
+        }
+        if(!pesoMenor.isEmpty() && !pesoMenor.equals("")){
+            filtros.add(pesoMenor);
+        }
+        
+        if(filtros.size() == 0){
+            
+        }
+        return filtros;
+    }
+    
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
