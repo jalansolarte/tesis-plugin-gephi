@@ -5,6 +5,8 @@
  */
 package co.edu.usbcali.ultimateGraphViewer;
 
+import java.io.File;
+import javax.swing.JFileChooser;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -292,6 +294,13 @@ public class UGVPanel extends TopComponent {
 
     private void btnCrearGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrafoActionPerformed
         // TODO add your handling code here:
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if (!jf.isMultiSelectionEnabled()) {
+         jf.setMultiSelectionEnabled(true);
+        }
+        jf.showOpenDialog(this); 
+        File[] file = jf.getSelectedFiles();
     }//GEN-LAST:event_btnCrearGrafoActionPerformed
 
     private void btnAplicarVisualizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarVisualizacionActionPerformed
