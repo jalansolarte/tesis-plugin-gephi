@@ -5,10 +5,13 @@
  */
 package co.edu.usbcali.ultimateGraphViewer;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.gephi.graph.api.Graph;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -99,10 +102,20 @@ public class UGVPanel extends TopComponent {
         org.openide.awt.Mnemonics.setLocalizedText(lblMasNodos, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblMasNodos.text")); // NOI18N
 
         txtMasNodos.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMasNodos.text")); // NOI18N
+        txtMasNodos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMasNodosKeyTyped(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(lblMenosNodos, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblMenosNodos.text")); // NOI18N
 
         txtMenosNodos.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMenosNodos.text")); // NOI18N
+        txtMenosNodos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMenosNodosKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlComunidadesLayout = new javax.swing.GroupLayout(pnlComunidades);
         pnlComunidades.setLayout(pnlComunidadesLayout);
@@ -148,8 +161,18 @@ public class UGVPanel extends TopComponent {
         org.openide.awt.Mnemonics.setLocalizedText(lblMenosComunidades, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblMenosComunidades.text")); // NOI18N
 
         txtMasComunidades.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMasComunidades.text")); // NOI18N
+        txtMasComunidades.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMasComunidadesKeyTyped(evt);
+            }
+        });
 
         txtMenosComunidades.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMenosComunidades.text")); // NOI18N
+        txtMenosComunidades.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMenosComunidadesKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlNodosLayout = new javax.swing.GroupLayout(pnlNodos);
         pnlNodos.setLayout(pnlNodosLayout);
@@ -199,8 +222,18 @@ public class UGVPanel extends TopComponent {
         org.openide.awt.Mnemonics.setLocalizedText(lblMenosPeso, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblMenosPeso.text")); // NOI18N
 
         txtMasPeso.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMasPeso.text")); // NOI18N
+        txtMasPeso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMasPesoKeyTyped(evt);
+            }
+        });
 
         txtMenosPeso.setText(org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.txtMenosPeso.text")); // NOI18N
+        txtMenosPeso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMenosPesoKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlAristasLayout = new javax.swing.GroupLayout(pnlAristas);
         pnlAristas.setLayout(pnlAristasLayout);
@@ -300,7 +333,6 @@ public class UGVPanel extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrafoActionPerformed
-        // TODO add your handling code here:
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
         if (!jf.isMultiSelectionEnabled()) {
@@ -308,16 +340,77 @@ public class UGVPanel extends TopComponent {
         }
         jf.showOpenDialog(this); 
         File[] file = jf.getSelectedFiles();
+        
     }//GEN-LAST:event_btnCrearGrafoActionPerformed
 
     private void btnAplicarVisualizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarVisualizacionActionPerformed
-        // TODO add your handling code here:
+        if(comMetodosVisualizacion.getSelectedItem().equals("Sombreado")){
+        
+        }else if(comMetodosVisualizacion.getSelectedItem().equals("Nodos")){
+        
+        } else if(comMetodosVisualizacion.getSelectedItem().equals("Aristas")){
+        
+        }
     }//GEN-LAST:event_btnAplicarVisualizacionActionPerformed
 
     private void btnAplicarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarFiltrosActionPerformed
-        // TODO add your handling code here:
         List<String> filtros = validarFiltros();
+
     }//GEN-LAST:event_btnAplicarFiltrosActionPerformed
+
+    private void txtMasNodosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMasNodosKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMasNodosKeyTyped
+
+    private void txtMenosNodosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMenosNodosKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMenosNodosKeyTyped
+
+    private void txtMasComunidadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMasComunidadesKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMasComunidadesKeyTyped
+
+    private void txtMenosComunidadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMenosComunidadesKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMenosComunidadesKeyTyped
+
+    private void txtMasPesoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMasPesoKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMasPesoKeyTyped
+
+    private void txtMenosPesoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMenosPesoKeyTyped
+        char c = evt.getKeyChar();
+        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
+            getToolkit().beep();
+            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtMenosPesoKeyTyped
 
     public List<String> validarFiltros(){
         
@@ -364,8 +457,8 @@ public class UGVPanel extends TopComponent {
             filtros.add(pesoMenor);
         }
         
-        if(filtros.size() == 0){
-            
+        if(filtros.isEmpty()){
+            JOptionPane.showMessageDialog(this, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return filtros;
     }

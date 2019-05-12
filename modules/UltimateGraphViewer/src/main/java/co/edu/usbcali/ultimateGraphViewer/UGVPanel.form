@@ -208,6 +208,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMasNodos.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMasNodosKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblMenosNodos">
               <Properties>
@@ -222,6 +225,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMenosNodos.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMenosNodosKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -335,6 +341,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMasComunidades.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMasComunidadesKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtMenosComunidades">
               <Properties>
@@ -342,6 +351,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMenosComunidades.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMenosComunidadesKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -416,6 +428,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMasPeso.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMasPesoKeyTyped"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtMenosPeso">
               <Properties>
@@ -423,6 +438,9 @@
                   <ResourceString bundle="co/edu/usbcali/ultimateGraphViewer/Bundle.properties" key="UGVPanel.txtMenosPeso.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtMenosPesoKeyTyped"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
