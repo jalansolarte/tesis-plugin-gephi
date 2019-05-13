@@ -6,6 +6,8 @@
 package co.edu.usbcali.ultimateGraphViewer;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -26,8 +28,8 @@ import org.openide.windows.TopComponent;
 @ActionReference(path = "Menu/Window", position = 1)
 @TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
 public class PanelCargarArchivos extends TopComponent {
-
-    File[] file = null;
+    
+    List<File> files = new ArrayList<>();
     
     public PanelCargarArchivos() {
         initComponents();
@@ -46,9 +48,9 @@ public class PanelCargarArchivos extends TopComponent {
 
         lblCrearGrafo = new javax.swing.JLabel();
         btnCrearGrafo = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnTags = new javax.swing.JButton();
+        btnRelaciones = new javax.swing.JButton();
+        btnComunidades = new javax.swing.JButton();
 
         lblCrearGrafo.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lblCrearGrafo, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.lblCrearGrafo.text")); // NOI18N
@@ -60,16 +62,26 @@ public class PanelCargarArchivos extends TopComponent {
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(btnTags, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.btnTags.text")); // NOI18N
+        btnTags.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnTagsActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.jButton2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnRelaciones, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.btnRelaciones.text")); // NOI18N
+        btnRelaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRelacionesActionPerformed(evt);
+            }
+        });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.jButton3.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnComunidades, org.openide.util.NbBundle.getMessage(PanelCargarArchivos.class, "PanelCargarArchivos.btnComunidades.text")); // NOI18N
+        btnComunidades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComunidadesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -79,11 +91,11 @@ public class PanelCargarArchivos extends TopComponent {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(btnTags)
                         .addGap(57, 57, 57)
-                        .addComponent(jButton2)
+                        .addComponent(btnRelaciones)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                        .addComponent(jButton3))
+                        .addComponent(btnComunidades))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblCrearGrafo)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -99,9 +111,9 @@ public class PanelCargarArchivos extends TopComponent {
                 .addComponent(lblCrearGrafo)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(btnTags)
+                    .addComponent(btnRelaciones)
+                    .addComponent(btnComunidades))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearGrafo)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -109,17 +121,10 @@ public class PanelCargarArchivos extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrafoActionPerformed
-        JFileChooser jf = new JFileChooser();
-        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (!jf.isMultiSelectionEnabled()) {
-         jf.setMultiSelectionEnabled(true);
-        }
-        jf.showOpenDialog(this); 
-        file = jf.getSelectedFiles();
         
     }//GEN-LAST:event_btnCrearGrafoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTagsActionPerformed
         File tags = null;
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -128,7 +133,32 @@ public class PanelCargarArchivos extends TopComponent {
         }
         jf.showOpenDialog(this); 
         tags = jf.getSelectedFile();
-    }//GEN-LAST:event_jButton1ActionPerformed
+        files.add(tags);
+    }//GEN-LAST:event_btnTagsActionPerformed
+
+    private void btnRelacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelacionesActionPerformed
+        File relaciones = null;
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if (!jf.isMultiSelectionEnabled()) {
+         jf.setMultiSelectionEnabled(true);
+        }
+        jf.showOpenDialog(this); 
+        relaciones = jf.getSelectedFile();
+        files.add(relaciones);
+    }//GEN-LAST:event_btnRelacionesActionPerformed
+
+    private void btnComunidadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComunidadesActionPerformed
+        File comunidades = null;
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        if (!jf.isMultiSelectionEnabled()) {
+         jf.setMultiSelectionEnabled(true);
+        }
+        jf.showOpenDialog(this); 
+        comunidades = jf.getSelectedFile();
+        files.add(comunidades);
+    }//GEN-LAST:event_btnComunidadesActionPerformed
     
     @Override
     public void componentOpened() {
@@ -153,10 +183,10 @@ public class PanelCargarArchivos extends TopComponent {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComunidades;
     private javax.swing.JButton btnCrearGrafo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnRelaciones;
+    private javax.swing.JButton btnTags;
     private javax.swing.JLabel lblCrearGrafo;
     // End of variables declaration//GEN-END:variables
 }
