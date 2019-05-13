@@ -19,14 +19,15 @@ import org.openide.windows.TopComponent;
  *
  * @author CamiloDelgado
  */
-@ConvertAsProperties(dtd = "-//co.edu.usbcali.ultimateGraphViewer//Simple//Es", autostore = false)
-@TopComponent.Description(preferredID = "UGVPanel",
+/*@ConvertAsProperties(dtd = "-//co.edu.usbcali.ultimateGraphViewer//Simple//Es", autostore = false)
+@TopComponent.Description(preferredID = "PanelCargarArchivos",
         iconBase="img/logo.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "layoutmode", openAtStartup = true)
-@ActionID(category = "Window", id = "co.edu.usbcali.ultimateGraphViewer.UGVPanel")
+@ActionID(category = "Window", id = "co.edu.usbcali.ultimateGraphViewer.PanelCargarArchivos")
 @ActionReference(path = "Menu/Window", position = 1)
-@TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
+@TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "PanelCargarArchivos")
+*/
 public class PanelCargarArchivos extends TopComponent {
     
     List<File> files = new ArrayList<>();
@@ -121,7 +122,8 @@ public class PanelCargarArchivos extends TopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrafoActionPerformed
-        
+        UGVPanel ugv = new UGVPanel();
+        ugv.setVisible(true);
     }//GEN-LAST:event_btnCrearGrafoActionPerformed
 
     private void btnTagsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTagsActionPerformed

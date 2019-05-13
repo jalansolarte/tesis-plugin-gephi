@@ -6,12 +6,9 @@
 package co.edu.usbcali.ultimateGraphViewer;
 
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.gephi.graph.api.Graph;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -48,7 +45,6 @@ public class UGVPanel extends TopComponent {
     private void initComponents() {
 
         lblCrearGrafo = new javax.swing.JLabel();
-        btnCrearGrafo = new javax.swing.JButton();
         lblMetodoVisualizacion = new javax.swing.JLabel();
         lblFiltros = new javax.swing.JLabel();
         btnAplicarVisualizacion = new javax.swing.JButton();
@@ -75,16 +71,12 @@ public class UGVPanel extends TopComponent {
         txtMenosPeso = new javax.swing.JTextField();
         btnLimpiarFiltros = new javax.swing.JButton();
         btnAplicarFiltros = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        pCArchivos1 = new co.edu.usbcali.ultimateGraphViewer.PCArchivos();
 
         lblCrearGrafo.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lblCrearGrafo, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblCrearGrafo.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(btnCrearGrafo, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.btnCrearGrafo.text")); // NOI18N
-        btnCrearGrafo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCrearGrafoActionPerformed(evt);
-            }
-        });
 
         org.openide.awt.Mnemonics.setLocalizedText(lblMetodoVisualizacion, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblMetodoVisualizacion.text")); // NOI18N
 
@@ -277,71 +269,72 @@ public class UGVPanel extends TopComponent {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(btnAplicarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblMetodoVisualizacion))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblFiltros)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblCrearGrafo)
-                                        .addComponent(comMetodosVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(lblCrearGrafo)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btnAplicarVisualizacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnCrearGrafo, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))))
-                        .addGap(0, 13, Short.MAX_VALUE))))
+                                .addComponent(jSeparator1))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(comMetodosVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnAplicarVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(pCArchivos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(153, 153, 153)
+                                    .addComponent(lblFiltros)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(122, 122, 122)
+                        .addComponent(lblMetodoVisualizacion))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(138, 138, 138)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnLimpiarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnAplicarFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblCrearGrafo)
-                    .addComponent(btnCrearGrafo))
-                .addGap(18, 18, 18)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pCArchivos1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblMetodoVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comMetodosVisualizacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAplicarVisualizacion))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblFiltros)
-                .addGap(16, 16, 16)
+                .addGap(11, 11, 11)
                 .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLimpiarFiltros)
                     .addComponent(btnAplicarFiltros))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnCrearGrafoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearGrafoActionPerformed
-        JFileChooser jf = new JFileChooser();
-        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (!jf.isMultiSelectionEnabled()) {
-         jf.setMultiSelectionEnabled(true);
-        }
-        jf.showOpenDialog(this); 
-        File[] file = jf.getSelectedFiles();
-        
-    }//GEN-LAST:event_btnCrearGrafoActionPerformed
 
     private void btnAplicarVisualizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAplicarVisualizacionActionPerformed
         if(comMetodosVisualizacion.getSelectedItem().equals("Sombreado")){
@@ -488,9 +481,10 @@ public class UGVPanel extends TopComponent {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAplicarFiltros;
     private javax.swing.JButton btnAplicarVisualizacion;
-    private javax.swing.JButton btnCrearGrafo;
     private javax.swing.JButton btnLimpiarFiltros;
     private javax.swing.JComboBox<String> comMetodosVisualizacion;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblConTags;
     private javax.swing.JLabel lblCrearGrafo;
     private javax.swing.JLabel lblFiltros;
@@ -502,6 +496,7 @@ public class UGVPanel extends TopComponent {
     private javax.swing.JLabel lblMenosPeso;
     private javax.swing.JLabel lblMetodoVisualizacion;
     private javax.swing.JLabel lblSinTags;
+    private co.edu.usbcali.ultimateGraphViewer.PCArchivos pCArchivos1;
     private javax.swing.JPanel pnlAristas;
     private javax.swing.JPanel pnlComunidades;
     private javax.swing.JTabbedPane pnlFiltros;
