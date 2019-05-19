@@ -8,11 +8,11 @@
     </parent>
 
     <groupId>usbcali.edu.co</groupId>
-    <artifactId>ultimate-graph-viewer</artifactId>
+    <artifactId>overlapping-communities-viewer</artifactId>
     <version>0.0.0</version>
     <packaging>nbm</packaging>
 
-    <name>Ultimate Graph Viewer</name>
+    <name>Overlapping Communities Viewer</name>
 
     <dependencies>
         <dependency>
@@ -76,5 +76,3 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 </project>
-
-

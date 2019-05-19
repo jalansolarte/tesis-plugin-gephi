@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package co.edu.usbcali.ultimateGraphViewer;
+package co.edu.usbcali.overlappingCommunitiesViewer;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -19,12 +14,12 @@ import org.openide.windows.TopComponent;
  *
  * @author CamiloDelgado
  */
-@ConvertAsProperties(dtd = "-//co.edu.usbcali.ultimateGraphViewer//Simple//Es", autostore = false)
+@ConvertAsProperties(dtd = "-//co.edu.usbcali.overlappingCommunitiesViewer//Simple//Es", autostore = false)
 @TopComponent.Description(preferredID = "UGVPanel",
         iconBase="img/logo.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "layoutmode", openAtStartup = true)
-@ActionID(category = "Window", id = "co.edu.usbcali.ultimateGraphViewer.UGVPanel")
+@ActionID(category = "Window", id = "co.edu.usbcali.overlappingCommunitiesViewer.UGVPanel")
 @ActionReference(path = "Menu/Window", position = 1)
 @TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
 public class UGVPanel extends TopComponent {
@@ -73,7 +68,7 @@ public class UGVPanel extends TopComponent {
         btnAplicarFiltros = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        pCArchivos1 = new co.edu.usbcali.ultimateGraphViewer.PCArchivos();
+        pCArchivos1 = new co.edu.usbcali.overlappingCommunitiesViewer.PCArchivos();
 
         lblCrearGrafo.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lblCrearGrafo, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblCrearGrafo.text")); // NOI18N
@@ -496,7 +491,7 @@ public class UGVPanel extends TopComponent {
     private javax.swing.JLabel lblMenosPeso;
     private javax.swing.JLabel lblMetodoVisualizacion;
     private javax.swing.JLabel lblSinTags;
-    private co.edu.usbcali.ultimateGraphViewer.PCArchivos pCArchivos1;
+    private co.edu.usbcali.overlappingCommunitiesViewer.PCArchivos pCArchivos1;
     private javax.swing.JPanel pnlAristas;
     private javax.swing.JPanel pnlComunidades;
     private javax.swing.JTabbedPane pnlFiltros;

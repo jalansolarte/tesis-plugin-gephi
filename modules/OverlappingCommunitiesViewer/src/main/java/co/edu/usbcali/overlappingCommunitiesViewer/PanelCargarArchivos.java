@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.edu.usbcali.ultimateGraphViewer;
+package co.edu.usbcali.overlappingCommunitiesViewer;
 
 import java.io.File;
 import java.util.ArrayList;
