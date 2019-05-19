@@ -52,7 +52,7 @@
     <Component class="javax.swing.JButton" name="btnTags">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/Bundle.properties" key="PCArchivos.btnTags.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/GUI/Bundle.properties" key="PCArchivos.btnTags.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -62,7 +62,7 @@
     <Component class="javax.swing.JButton" name="btnRelaciones">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/Bundle.properties" key="PCArchivos.btnRelaciones.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/GUI/Bundle.properties" key="PCArchivos.btnRelaciones.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -72,7 +72,7 @@
     <Component class="javax.swing.JButton" name="btnComunidades">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/Bundle.properties" key="PCArchivos.btnComunidades.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/GUI/Bundle.properties" key="PCArchivos.btnComunidades.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
@@ -82,7 +82,7 @@
     <Component class="javax.swing.JButton" name="btnCrearGrafo">
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/Bundle.properties" key="PCArchivos.btnCrearGrafo.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="co/edu/usbcali/overlappingCommunitiesViewer/GUI/Bundle.properties" key="PCArchivos.btnCrearGrafo.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>

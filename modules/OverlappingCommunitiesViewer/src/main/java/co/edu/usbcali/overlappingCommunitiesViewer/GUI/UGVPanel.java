@@ -1,4 +1,4 @@
-package co.edu.usbcali.overlappingCommunitiesViewer;
+package co.edu.usbcali.overlappingCommunitiesViewer.GUI;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import org.openide.windows.TopComponent;
         iconBase="img/logo.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS)
 @TopComponent.Registration(mode = "layoutmode", openAtStartup = true)
-@ActionID(category = "Window", id = "co.edu.usbcali.overlappingCommunitiesViewer.UGVPanel")
+@ActionID(category = "Window", id = "co.edu.usbcali.overlappingCommunitiesViewer.GUI.UGVPanel")
 @ActionReference(path = "Menu/Window", position = 1)
 @TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
 public class UGVPanel extends TopComponent {
@@ -68,7 +68,7 @@ public class UGVPanel extends TopComponent {
         btnAplicarFiltros = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
-        pCArchivos1 = new co.edu.usbcali.overlappingCommunitiesViewer.PCArchivos();
+        pCArchivos1 = new co.edu.usbcali.overlappingCommunitiesViewer.GUI.PCArchivos();
 
         lblCrearGrafo.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(lblCrearGrafo, org.openide.util.NbBundle.getMessage(UGVPanel.class, "UGVPanel.lblCrearGrafo.text")); // NOI18N
@@ -491,7 +491,7 @@ public class UGVPanel extends TopComponent {
     private javax.swing.JLabel lblMenosPeso;
     private javax.swing.JLabel lblMetodoVisualizacion;
     private javax.swing.JLabel lblSinTags;
-    private co.edu.usbcali.overlappingCommunitiesViewer.PCArchivos pCArchivos1;
+    private co.edu.usbcali.overlappingCommunitiesViewer.GUI.PCArchivos pCArchivos1;
     private javax.swing.JPanel pnlAristas;
     private javax.swing.JPanel pnlComunidades;
     private javax.swing.JTabbedPane pnlFiltros;
