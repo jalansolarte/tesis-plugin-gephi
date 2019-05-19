@@ -50,10 +50,13 @@
             <groupId>org.gephi</groupId>
             <artifactId>graph-api</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.gephi</groupId>
             <artifactId>utils-longtask</artifactId>
         </dependency>
+        
+        <!-- Generador del Grafo -->
         <dependency>
             <groupId>org.gephi</groupId>
             <artifactId>io-importer-api</artifactId>
@@ -61,6 +64,12 @@
         <dependency>
             <groupId>org.gephi</groupId>
             <artifactId>io-generator-api</artifactId>
+        </dependency>
+        
+        <!-- Filtros -->
+        <dependency>
+            <groupId>org.gephi</groupId>
+            <artifactId>filters-api</artifactId>
         </dependency>
     </dependencies>
 

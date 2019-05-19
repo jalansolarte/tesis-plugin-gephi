@@ -23,7 +23,7 @@ import org.openide.windows.TopComponent;
 @ActionReference(path = "Menu/Window", position = 1)
 @TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
 public class UGVPanel extends TopComponent {
-
+    
     public UGVPanel() {
         initComponents();
         setName(NbBundle.getMessage(UGVPanel.class, "UGV"));
