@@ -53,6 +53,7 @@ public class OcvGeneratorUI implements GeneratorUI{
             ocvGenerator.setFileTags(ogvGeneratorPanel.getFileTags());
             ocvGenerator.setFileRelations(ogvGeneratorPanel.getFileRelations());
             ocvGenerator.setFileCommunities(ogvGeneratorPanel.getFileCommunities());
+            ocvGenerator.setCommunitiesGrouping(ogvGeneratorPanel.getCommunitiesGrouping());
         }
             
     }

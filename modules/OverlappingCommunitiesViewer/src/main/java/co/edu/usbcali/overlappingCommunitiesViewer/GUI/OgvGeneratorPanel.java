@@ -19,12 +19,15 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
     private File fileTags;
     private File fileCommunities;
     private File fileRelations;
+    private Boolean communitiesGrouping;
     
     /**
      * Creates new form OgvGeneratorPanel
      */
     public OgvGeneratorPanel() {
+        communitiesGrouping = false;
         initComponents();
+        btnCommunitiesGrouping.setSelected(communitiesGrouping);
     }
 
     public File getFileTags() {
@@ -37,6 +40,10 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
 
     public File getFileRelations() {
         return fileRelations;
+    }
+
+    public Boolean getCommunitiesGrouping() {
+        return communitiesGrouping;
     }
 
     /**
@@ -58,6 +65,7 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
         btnSelectTags = new javax.swing.JButton();
         btnSelectRelations = new javax.swing.JButton();
         btnSelectCommunities = new javax.swing.JButton();
+        btnCommunitiesGrouping = new javax.swing.JCheckBox();
 
         org.openide.awt.Mnemonics.setLocalizedText(lblSelectFiles, org.openide.util.NbBundle.getMessage(OgvGeneratorPanel.class, "OgvGeneratorPanel.lblSelectFiles.text")); // NOI18N
 
@@ -94,6 +102,18 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(btnCommunitiesGrouping, org.openide.util.NbBundle.getMessage(OgvGeneratorPanel.class, "OgvGeneratorPanel.btnCommunitiesGrouping.text")); // NOI18N
+        btnCommunitiesGrouping.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btnCommunitiesGroupingStateChanged(evt);
+            }
+        });
+        btnCommunitiesGrouping.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCommunitiesGroupingActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -102,57 +122,63 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTags)
-                            .addComponent(lblFileTags, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSelectTags))
+                        .addComponent(btnCommunitiesGrouping)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFileRelations, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblRelations))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSelectRelations))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblSelectFiles)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblFileCommunities, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblCommunities))
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSelectCommunities)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(lblTags)
+                                    .addComponent(lblFileTags, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSelectTags))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblFileRelations, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblRelations))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSelectRelations))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblSelectFiles)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lblFileCommunities, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(lblCommunities))
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnSelectCommunities)))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblSelectFiles)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnSelectCommunities, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblSelectFiles)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblTags)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblTags)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblFileTags))
+                                    .addComponent(btnSelectTags, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(23, 23, 23)
+                                .addComponent(lblRelations)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblFileTags))
-                            .addComponent(btnSelectTags, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(23, 23, 23)
-                        .addComponent(lblRelations)
+                                .addComponent(lblFileRelations))
+                            .addComponent(btnSelectRelations, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(lblCommunities)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblFileRelations))
-                    .addComponent(btnSelectRelations, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblFileCommunities)))
                 .addGap(18, 18, 18)
-                .addComponent(lblCommunities)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFileCommunities)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSelectCommunities, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(btnCommunitiesGrouping)
+                .addContainerGap(148, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -221,8 +247,17 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnSelectCommunitiesActionPerformed
 
+    private void btnCommunitiesGroupingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCommunitiesGroupingActionPerformed
+        communitiesGrouping = btnCommunitiesGrouping.isSelected();
+    }//GEN-LAST:event_btnCommunitiesGroupingActionPerformed
+
+    private void btnCommunitiesGroupingStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnCommunitiesGroupingStateChanged
+
+    }//GEN-LAST:event_btnCommunitiesGroupingStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox btnCommunitiesGrouping;
     private javax.swing.JButton btnSelectCommunities;
     private javax.swing.JButton btnSelectRelations;
     private javax.swing.JButton btnSelectTags;
