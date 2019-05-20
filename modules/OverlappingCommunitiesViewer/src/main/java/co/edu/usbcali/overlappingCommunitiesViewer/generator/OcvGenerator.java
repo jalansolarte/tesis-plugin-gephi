@@ -15,9 +15,9 @@ import org.gephi.utils.progress.ProgressTicket;
 import org.openide.util.lookup.ServiceProvider;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-import org.gephi.io.importer.api.EdgeDirection;
 import org.gephi.io.importer.api.EdgeDirectionDefault;
 import org.gephi.io.importer.api.EdgeDraft;
+import org.gephi.utils.progress.Progress;
 
 /**
  *
@@ -26,7 +26,7 @@ import org.gephi.io.importer.api.EdgeDraft;
 @ServiceProvider(service = Generator.class)
 public class OcvGenerator implements Generator {
     
-    protected ProgressTicket progress;
+    protected ProgressTicket progressTicket;
     protected boolean cancel = false;
     private File fileTags;
     private File fileCommunities;
@@ -39,6 +39,8 @@ public class OcvGenerator implements Generator {
         if(fileTags == null || fileCommunities == null || fileRelations == null){
             return;
         }
+        
+        Progress.start(progressTicket);
         
         container.addNodeColumn("tags", String.class);
         container.addNodeColumn("isCommunity", Boolean.class);
@@ -57,7 +59,7 @@ public class OcvGenerator implements Generator {
                     tag = tags[i].replaceAll("\n", "");
                     tagsStr += tag + " ";
                 }
-                
+                tagsStr = tagsStr.trim();
                 NodeDraft node = container.factory().newNodeDraft(nodo);
                 node.setValue("tags", tagsStr);
                 node.setValue("isCommunity", false);
@@ -71,7 +73,7 @@ public class OcvGenerator implements Generator {
         //Se crean las relaciones
         try {
             Files.readAllLines(fileRelations.toPath()).forEach((line)->{
-                String[] componentes = line.split(" ");
+                String[] componentes = line.split(" "); 
                 
                 String nodo1 = componentes[0];
                 NodeDraft node1 = container.getNode(nodo1);
@@ -79,7 +81,7 @@ public class OcvGenerator implements Generator {
                 NodeDraft node2 = container.getNode(nodo2);
                 
                 String valorStr = componentes[2];
-                Double valor = null;
+                Double valor = 0D;
                 try {
                     valor = Double.valueOf(valorStr);
                 } catch (Exception e) {
@@ -101,27 +103,33 @@ public class OcvGenerator implements Generator {
         try {
             i = 0;
             Files.readAllLines(fileCommunities.toPath()).forEach((line)->{
-                String[] nodosComunidad = line.split(" ");
+                String[] nodosComunidad = line.split(", ");
                 
                 NodeDraft community = container.factory().newNodeDraft("Community-" + i);
                 community.setValue("isCommunity", true);
                 
                 container.addNode(community);
                 for (String nodo : nodosComunidad) {
-                    nodo = nodo.replaceAll("[", "");
-                    nodo = nodo.replaceAll("]", "");
+                    nodo = nodo.replaceAll("\\[", "");
+                    nodo = nodo.replaceAll("\\]", "");
                     nodo = nodo.replaceAll("\n", "");
                     
                     NodeDraft node = container.getNode(nodo);
                     
-                    EdgeDraft edge = container.factory().newEdgeDraft();
-                    edge.setSource(community);
-                    edge.setTarget(node);
-                    edge.setWeight(0D);
+                    if(node != null){
+                        EdgeDraft edge = container.factory().newEdgeDraft();
+                        edge.setSource(community);
+                        edge.setTarget(node);
+                        edge.setWeight(0D);
                     
-                    container.addEdge(edge);
+                        container.addEdge(edge);
+                    }
                 }
+                i++;
             });
+            
+            Progress.finish(progressTicket);
+            
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Communities File Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -145,7 +153,7 @@ public class OcvGenerator implements Generator {
 
     @Override
     public void setProgressTicket(ProgressTicket progressTicket) {
-        this.progress = progressTicket;
+        this.progressTicket = progressTicket;
     }
 
     public void setFileTags(File fileTags) {

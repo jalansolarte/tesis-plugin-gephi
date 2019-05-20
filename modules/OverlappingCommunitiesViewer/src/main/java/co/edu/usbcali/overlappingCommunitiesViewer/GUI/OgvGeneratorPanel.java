@@ -170,8 +170,6 @@ public class OgvGeneratorPanel extends javax.swing.JPanel {
             String extension = name.substring(name.lastIndexOf("."));
             if(extension.equalsIgnoreCase(".txt")){
                 fileTags = tags;
-                fileRelations = tags;
-                fileCommunities = tags;
                 lblFileTags.setText(name);
             }else{
                 JOptionPane.showMessageDialog(null, "El formato del archivo no es 'txt'", "File Error", JOptionPane.ERROR_MESSAGE);
