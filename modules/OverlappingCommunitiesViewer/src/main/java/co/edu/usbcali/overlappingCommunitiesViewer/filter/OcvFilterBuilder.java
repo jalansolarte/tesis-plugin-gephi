@@ -62,7 +62,7 @@ public class OcvFilterBuilder implements FilterBuilder{
         }
 
     @Override
-    public Filter getFilter() {
+    public Filter getFilter(Workspace workspace) {
         return new OcvFilterCustom();
     }
 }
