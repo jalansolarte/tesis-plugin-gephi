@@ -5,21 +5,12 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.filter;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JPanel;
-import org.gephi.filters.api.FilterLibrary;
 import org.gephi.filters.spi.Category;
-import org.gephi.filters.spi.CategoryBuilder;
 import org.gephi.filters.spi.Filter;
 import org.gephi.filters.spi.FilterBuilder;
-import org.gephi.graph.api.AttributeUtils;
-import org.gephi.graph.api.Column;
-import org.gephi.graph.api.GraphController;
-import org.gephi.graph.api.GraphModel;
 import org.gephi.project.api.Workspace;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -33,7 +24,7 @@ public class OcvFilterBuilder implements FilterBuilder {
     private final static Category TOP_CATEGORY = new Category(
             "Overlapping Communities Viewer Nodes",
             null,
-            FilterLibrary.ATTRIBUTES);
+            null);
     
     
     @Override

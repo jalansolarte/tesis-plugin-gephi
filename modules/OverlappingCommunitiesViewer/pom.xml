@@ -61,6 +61,13 @@
             <artifactId>project-api</artifactId>
         </dependency>
         
+        <!-- https://mvnrepository.com/artifact/org.gephi/core-library-wrapper -->
+        <dependency>
+            <groupId>org.gephi</groupId>
+            <artifactId>core-library-wrapper</artifactId>
+        </dependency>
+
+        
         <!-- Generador del Grafo -->
         <dependency>
             <groupId>org.gephi</groupId>

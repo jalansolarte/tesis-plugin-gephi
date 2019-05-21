@@ -5,17 +5,11 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.filter;
 
+import co.edu.usbcali.overlappingCommunitiesViewer.generator.model.FiltersValues;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.gephi.filters.spi.FilterProperty;
-import org.gephi.graph.api.GraphModel;
-import org.openide.util.Lookup;
-import org.openide.util.WeakListeners;
 
 /**
  *
@@ -322,35 +316,52 @@ public class OcvFilterUI extends javax.swing.JPanel{
     }//GEN-LAST:event_txtMenosPesoKeyTyped
 
     private void btnFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrosActionPerformed
-    List<String> filtroComunidades = validarFiltrosComunidades();
-    List<String> filtroNodos = validarFiltrosNodos();
-    List<String> filtroAristas = validarFiltrosAristas();
+    List<FiltersValues> filtroComunidades = validarFiltrosComunidades();
+    List<FiltersValues> filtroNodos = validarFiltrosNodos();
+    List<FiltersValues> filtroAristas = validarFiltrosAristas();
     if(filtroComunidades.isEmpty() && filtroNodos.isEmpty() && filtroAristas.isEmpty()){
         JOptionPane.showMessageDialog(this, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
     } else {
-        filter.setComunidades(filtroComunidades);
-        filter.setNodos(filtroNodos);
-        filter.setAristas(filtroAristas);
+        filter.setCommunitiesFilter(filtroComunidades);
+        filter.setNodesFilter(filtroNodos);
+        filter.setAristasFilter(filtroAristas);
     }
     }//GEN-LAST:event_btnFiltrosActionPerformed
 
-    public List<String> validarFiltrosComunidades(){
-        List<String> filtros = new ArrayList<>();
+    public List<FiltersValues> validarFiltrosComunidades(){
+        List<FiltersValues> cfilters = new ArrayList<>();
         //Comunidades
         String masNodos = txtMasNodos.getText();
         String menosNodos = txtMenosNodos.getText();
         
         if(!masNodos.isEmpty() && !masNodos.equals("")){
-            filtros.add(masNodos);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(masNodos);
+            cfilters.add(cf);
+        }else if(masNodos.isEmpty() && masNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
         if(!menosNodos.isEmpty() && !menosNodos.equals("")){
-            filtros.add(menosNodos);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(menosNodos);
+            cfilters.add(cf);
+        }else if(masNodos.isEmpty() && masNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
-        return filtros;
+        return cfilters;
     }
     
-    public List<String> validarFiltrosNodos(){
-        List<String> filtros = new ArrayList<>();
+    public List<FiltersValues> validarFiltrosNodos(){
+        
+        List<FiltersValues> cfilters = new ArrayList<>();
         //Nodos
         String conTags = txtConTags.getText();
         String sinTags = txtSinTags.getText();
@@ -358,35 +369,83 @@ public class OcvFilterUI extends javax.swing.JPanel{
         String menosComunidades = txtMenosComunidades.getText();
         
         if(!conTags.isEmpty() && !conTags.equals("")){
-            filtros.add(conTags);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(conTags);
+            cfilters.add(cf);
+        }else if(conTags.isEmpty() && conTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
         if(!sinTags.isEmpty() && !sinTags.equals("")){
-            filtros.add(sinTags);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(sinTags);
+            cfilters.add(cf);
+        }else if(sinTags.isEmpty() && sinTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
         if(!masComunidades.isEmpty() && !masComunidades.equals("")){
-            filtros.add(masComunidades);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue(masComunidades);
+            cfilters.add(cf);
+        }else if(masComunidades.isEmpty() && masComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
         if(!menosComunidades.isEmpty() && !menosComunidades.equals("")){
-            filtros.add(menosComunidades);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue(menosComunidades);
+            cfilters.add(cf);
+        }else if(menosComunidades.isEmpty() && menosComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
-        return filtros;
+        return cfilters;
     }
     
-    public List<String> validarFiltrosAristas(){
+    public List<FiltersValues> validarFiltrosAristas(){
         
-        List<String> filtros = new ArrayList<>();
+        List<FiltersValues> cfilters = new ArrayList<>();
         
         //Aristas
         String pesoMayor = txtMasPeso.getText();
         String pesoMenor = txtMenosPeso.getText();
         
         if(!pesoMayor.isEmpty() && !pesoMayor.equals("")){
-            filtros.add(pesoMayor);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(pesoMayor);
+            cfilters.add(cf);
+        }else if(pesoMayor.isEmpty() && pesoMayor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
         if(!pesoMenor.isEmpty() && !pesoMenor.equals("")){
-            filtros.add(pesoMenor);
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(pesoMenor);
+            cfilters.add(cf);
+        }else if(pesoMenor.isEmpty() && pesoMenor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
         }
-        return filtros;
+        return cfilters;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

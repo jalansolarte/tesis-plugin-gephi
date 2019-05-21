@@ -5,18 +5,14 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.filter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import co.edu.usbcali.overlappingCommunitiesViewer.generator.model.FiltersValues;
+import com.google.common.collect.Iterators;
 import java.util.List;
 import javax.swing.JOptionPane;
 import org.gephi.filters.spi.ComplexFilter;
 import org.gephi.filters.spi.FilterProperty;
-import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.Node;
-import org.gephi.graph.api.NodeIterable;
-import org.gephi.io.importer.api.NodeDraft;
 
 /**
  *
@@ -25,9 +21,10 @@ import org.gephi.io.importer.api.NodeDraft;
 public class OcvFilterCustom implements ComplexFilter{
 
     boolean useRegex;
-    private List<String> comunidades = new ArrayList<>();
-    private List<String> nodos = new ArrayList<>();
-    private List<String> aristas = new ArrayList<>();
+    
+    private List<FiltersValues> communitiesFilter;
+    private List<FiltersValues> nodesFilter;
+    private List<FiltersValues> aristasFilter;
     
     @Override
     public String getName() {
@@ -51,91 +48,146 @@ public class OcvFilterCustom implements ComplexFilter{
     public void setUseRegex(boolean useRegex) {
         this.useRegex = useRegex;
     }
+    
     @Override
     public Graph filter(Graph graph) {
         
-        
-        if(comunidades.isEmpty() && nodos.isEmpty() && aristas.isEmpty()){
+        if(communitiesFilter.isEmpty() && nodesFilter.isEmpty() && aristasFilter.isEmpty()){
             JOptionPane.showMessageDialog(null, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
         }else{
-            Graph graph1 = null;
-            //comunidades
-            if(!comunidades.isEmpty()){
-               /* 
-                Node[] nodes = graph.getNodes().toArray();
-                    for(int i = 0; i < nodes.length;i++){
-                        if(nodes[i].getAttribute("isCommunity").equals("isCommunity")){
-                            graph1.addNode(nodes[i]);
+            Node[] nodes = graph.getNodes().toArray();
+            boolean eliminar = true;
+            
+            for (Node node : nodes) {
+                //comunidades con mas de N nodos
+                System.out.println("Esto es community: " + node.getAttribute("isCommunity"));
+                if(!communitiesFilter.isEmpty()){
+                    if(communitiesFilter.get(0).getId() == 0){
+                        if(node.getAttribute("isCommunity") != null && 
+                                node.getAttribute("isCommunity").equals(true)){
+                           int numNodesPerCommunities = Iterators.size(graph.getEdges(node).iterator());
+                           int valueCompare = Integer.parseInt(communitiesFilter.get(0).getValue());
+                           if(valueCompare <= numNodesPerCommunities){
+                               eliminar = false;
+                           }
                         }
                     }
-                */
-            }
-            //nodos
-            if(!nodos.isEmpty()){
-            
-            }
-            //aristas
-            if(!aristas.isEmpty()){
-            
-            }
-            //Codigo que quita la mitad de relaciones
-            int edgeCount = graph.getEdgeCount();
-            edgeCount /= 2;
-        
-            Edge[] edges = graph.getEdges().toArray();
-            Arrays.sort(edges, new Comparator<Edge>() {
-                public int compare(Edge o1, Edge o2){
-                    return Double.compare(o1.getWeight(), o2.getWeight());
                 }
-            });
- 
-            for (int i = 0; i < edgeCount; i++) {
-                Edge edge = edges[i];
-                graph.removeEdge(edge);
+                //comunidades con menos de N nodos
+                System.out.println("Esto es community: " + node.getAttribute("isCommunity"));
+                if(!communitiesFilter.isEmpty()){
+                    if(communitiesFilter.get(1).getId() == 1){
+                        if(node.getAttribute("isCommunity") != null && 
+                                node.getAttribute("isCommunity").equals(true)){
+                           int numNodesPerCommunities = Iterators.size(graph.getEdges(node).iterator());
+                           int valueCompare = Integer.parseInt(communitiesFilter.get(0).getValue());
+                           if(valueCompare > numNodesPerCommunities){
+                               eliminar = false;
+                           }
+                        }
+                    }
+                }
+            
+                //nodos contengan tags
+                if(!nodesFilter.isEmpty()){
+                    if (nodesFilter.get(0).getId() == 0 ) {
+                        //Cambiar por Contains -LowerCase
+                        if (node.getAttribute("Tags") != null && 
+                                node.getAttribute("Tags").equals(nodesFilter.get(0).getValue())) {
+                                eliminar = false;
+                        }
+                    }
+                }   
+                //nodos no contengan tags
+                if(!nodesFilter.isEmpty()){
+                    if (nodesFilter.get(1).getId() == 1 ) {
+                        //Cambiar por Contains -LowerCase
+                        if (node.getAttribute("Tags") != null && 
+                                !node.getAttribute("Tags").equals(nodesFilter.get(1).getValue())) {
+                                eliminar = false;
+                        }
+                    }
+                }
+                //nodos en más de n comunidades
+                if(!nodesFilter.isEmpty()){
+                    if (nodesFilter.get(2).getId() == 2 ) {
+                        //Cambiar por Contains -LowerCase
+                        if (node.getAttribute("Tags") != null && 
+                                !node.getAttribute("Tags").equals(nodesFilter.get(2).getValue())) {
+                                eliminar = false;
+                        }
+                    }
+                }
+                //nodos en menos de n comunidades
+                if(!nodesFilter.isEmpty()){
+                    if (nodesFilter.get(3).getId() == 3 ) {
+                        //Cambiar por Contains -LowerCase
+                        if (node.getAttribute("Tags") != null && 
+                                !node.getAttribute("Tags").equals(nodesFilter.get(3).getValue())) {
+                                eliminar = false;
+                        }
+                    }
+                }
+                
+                //aristas con peso mayor a N
+                if(!aristasFilter.isEmpty()){
+                    if(aristasFilter.get(0).getId() == 0){
+                        //TODO: FILTRAR POR ARISTA
+                    }
+                }
+                //aristas con peso menor a N
+                if(!aristasFilter.isEmpty()){
+                    if(aristasFilter.get(1).getId() == 1){
+                        //TODOO: FILTRAR POR ARISTA
+                    }
+                }
+                if(eliminar){
+                    graph.removeNode(node);
+                }
             }
         }
         return graph;
     }
 
     /**
-     * @return the comunidades
+     * @return the communitiesFilter
      */
-    public List<String> getComunidades() {
-        return comunidades;
+    public List<FiltersValues> getCommunitiesFilter() {
+        return communitiesFilter;
     }
 
     /**
-     * @param comunidades the comunidades to set
+     * @param communitiesFilter the communitiesFilter to set
      */
-    public void setComunidades(List<String> comunidades) {
-        this.comunidades = comunidades;
+    public void setCommunitiesFilter(List<FiltersValues> communitiesFilter) {
+        this.communitiesFilter = communitiesFilter;
     }
 
     /**
-     * @return the nodos
+     * @return the nodesFilter
      */
-    public List<String> getNodos() {
-        return nodos;
+    public List<FiltersValues> getNodesFilter() {
+        return nodesFilter;
     }
 
     /**
-     * @param nodos the nodos to set
+     * @param nodesFilter the nodesFilter to set
      */
-    public void setNodos(List<String> nodos) {
-        this.nodos = nodos;
+    public void setNodesFilter(List<FiltersValues> nodesFilter) {
+        this.nodesFilter = nodesFilter;
     }
 
     /**
-     * @return the aristas
+     * @return the aristasFilter
      */
-    public List<String> getAristas() {
-        return aristas;
+    public List<FiltersValues> getAristasFilter() {
+        return aristasFilter;
     }
 
     /**
-     * @param aristas the relaciones to set
+     * @param aristasFilter the aristasFilter to set
      */
-    public void setAristas(List<String> aristas) {
-        this.aristas = aristas;
+    public void setAristasFilter(List<FiltersValues> aristasFilter) {
+        this.aristasFilter = aristasFilter;
     }
 }
