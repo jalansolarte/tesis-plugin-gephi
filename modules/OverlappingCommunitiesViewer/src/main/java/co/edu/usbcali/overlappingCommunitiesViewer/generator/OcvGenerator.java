@@ -152,7 +152,7 @@ public class OcvGenerator implements Generator {
 
                     for (int i = 1; i < tags.length; i++) {
                         tag = tags[i].replaceAll("\n", "");
-                        tagsStr += tag + " ";
+                        tagsStr += tag.toLowerCase() + " ";
                     }
                     tagsStr = tagsStr.trim();
                     NodeDraft node = container.factory().newNodeDraft(nodo);
