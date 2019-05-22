@@ -5,19 +5,17 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.filter;
 
+import co.edu.usbcali.overlappingCommunitiesViewer.generator.model.FiltersValues;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import org.gephi.filters.spi.FilterProperty;
-import org.openide.util.WeakListeners;
 
 /**
  *
  * @author zinko
  */
-public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
+public class OcvFilterUI extends javax.swing.JPanel{
 
     private OcvFilterCustom filter;
     
@@ -30,12 +28,6 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
 
     public void setup(OcvFilterCustom f) {
         this.filter = f;        
-    }
-    
-    @Override
-    public void stateChanged(ChangeEvent e) {
-        //The property number 1 is the top property
-        FilterProperty top = filter.getProperties()[1];
     }
     
     /**
@@ -67,7 +59,7 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
         lblMenosPeso = new javax.swing.JLabel();
         txtMasPeso = new javax.swing.JTextField();
         txtMenosPeso = new javax.swing.JTextField();
-        btnFiltrar = new javax.swing.JButton();
+        btnFiltros = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(lblMasNodos, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.lblMasNodos.text")); // NOI18N
 
@@ -238,10 +230,10 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
 
         pnlFiltros.addTab(org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.pnlAristas.TabConstraints.tabTitle"), pnlAristas); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(btnFiltrar, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.btnFiltrar.text")); // NOI18N
-        btnFiltrar.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(btnFiltros, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.btnFiltros.text")); // NOI18N
+        btnFiltros.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFiltrarActionPerformed(evt);
+                btnFiltrosActionPerformed(evt);
             }
         });
 
@@ -255,7 +247,7 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFiltrar)
+                .addComponent(btnFiltros)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -264,7 +256,7 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
                 .addContainerGap()
                 .addComponent(pnlFiltros, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnFiltrar)
+                .addComponent(btnFiltros)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -323,13 +315,141 @@ public class OcvFilterUI extends javax.swing.JPanel implements ChangeListener{
         }
     }//GEN-LAST:event_txtMenosPesoKeyTyped
 
-    private void btnFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnFiltrarActionPerformed
+    private void btnFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrosActionPerformed
+    List<FiltersValues> filtroComunidades = validarFiltrosComunidades();
+    List<FiltersValues> filtroNodos = validarFiltrosNodos();
+    List<FiltersValues> filtroAristas = validarFiltrosAristas();
+    if(filtroComunidades.isEmpty() && filtroNodos.isEmpty() && filtroAristas.isEmpty()){
+        JOptionPane.showMessageDialog(this, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
+    } else {
+        filter.setCommunitiesFilter(filtroComunidades);
+        filter.setNodesFilter(filtroNodos);
+        filter.setAristasFilter(filtroAristas);
+    }
+    }//GEN-LAST:event_btnFiltrosActionPerformed
 
+    public List<FiltersValues> validarFiltrosComunidades(){
+        List<FiltersValues> cfilters = new ArrayList<>();
+        //Comunidades
+        String masNodos = txtMasNodos.getText();
+        String menosNodos = txtMenosNodos.getText();
+        
+        if(!masNodos.isEmpty() && !masNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(masNodos);
+            cfilters.add(cf);
+        }else if(masNodos.isEmpty() && masNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        if(!menosNodos.isEmpty() && !menosNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(menosNodos);
+            cfilters.add(cf);
+        }else if(masNodos.isEmpty() && masNodos.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        return cfilters;
+    }
+    
+    public List<FiltersValues> validarFiltrosNodos(){
+        
+        List<FiltersValues> cfilters = new ArrayList<>();
+        //Nodos
+        String conTags = txtConTags.getText();
+        String sinTags = txtSinTags.getText();
+        String masComunidades = txtMasComunidades.getText();
+        String menosComunidades = txtMenosComunidades.getText();
+        
+        if(!conTags.isEmpty() && !conTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(conTags);
+            cfilters.add(cf);
+        }else if(conTags.isEmpty() && conTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        if(!sinTags.isEmpty() && !sinTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(sinTags);
+            cfilters.add(cf);
+        }else if(sinTags.isEmpty() && sinTags.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        if(!masComunidades.isEmpty() && !masComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue(masComunidades);
+            cfilters.add(cf);
+        }else if(masComunidades.isEmpty() && masComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        if(!menosComunidades.isEmpty() && !menosComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(3);
+            cf.setValue(menosComunidades);
+            cfilters.add(cf);
+        }else if(menosComunidades.isEmpty() && menosComunidades.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(4);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        return cfilters;
+    }
+    
+    public List<FiltersValues> validarFiltrosAristas(){
+        
+        List<FiltersValues> cfilters = new ArrayList<>();
+        
+        //Aristas
+        String pesoMayor = txtMasPeso.getText();
+        String pesoMenor = txtMenosPeso.getText();
+        
+        if(!pesoMayor.isEmpty() && !pesoMayor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(0);
+            cf.setValue(pesoMayor);
+            cfilters.add(cf);
+        }else if(pesoMayor.isEmpty() && pesoMayor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        if(!pesoMenor.isEmpty() && !pesoMenor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(1);
+            cf.setValue(pesoMenor);
+            cfilters.add(cf);
+        }else if(pesoMenor.isEmpty() && pesoMenor.equals("")){
+            FiltersValues cf = new FiltersValues();
+            cf.setId(2);
+            cf.setValue("NOT VALUE");
+            cfilters.add(cf);
+        }
+        return cfilters;
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnFiltrar;
+    private javax.swing.JButton btnFiltros;
     private javax.swing.JLabel lblConTags;
     private javax.swing.JLabel lblMasComunidades;
     private javax.swing.JLabel lblMasNodos;

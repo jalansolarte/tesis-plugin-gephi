@@ -14,14 +14,7 @@ import org.openide.windows.TopComponent;
  *
  * @author CamiloDelgado
  */
-@ConvertAsProperties(dtd = "-//co.edu.usbcali.overlappingCommunitiesViewer//Simple//Es", autostore = false)
-@TopComponent.Description(preferredID = "UGVPanel",
-        iconBase="img/logo.png",
-        persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "layoutmode", openAtStartup = true)
-@ActionID(category = "Window", id = "co.edu.usbcali.overlappingCommunitiesViewer.GUI.UGVPanel")
-@ActionReference(path = "Menu/Window", position = 1)
-@TopComponent.OpenActionRegistration(displayName = "#UGV", preferredID = "UGVPanel")
+
 public class UGVPanel extends TopComponent {
     
     public UGVPanel() {

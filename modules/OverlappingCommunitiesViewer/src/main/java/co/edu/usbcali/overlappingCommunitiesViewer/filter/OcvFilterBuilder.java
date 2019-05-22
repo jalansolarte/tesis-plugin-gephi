@@ -5,11 +5,8 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.filter;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Icon;
 import javax.swing.JPanel;
-import org.gephi.filters.api.FilterLibrary;
 import org.gephi.filters.spi.Category;
 import org.gephi.filters.spi.Filter;
 import org.gephi.filters.spi.FilterBuilder;
@@ -22,12 +19,13 @@ import org.openide.util.lookup.ServiceProvider;
  */
 
 @ServiceProvider(service = FilterBuilder.class)
-public class OcvFilterBuilder implements FilterBuilder{
+public class OcvFilterBuilder implements FilterBuilder {
 
     private final static Category TOP_CATEGORY = new Category(
             "Overlapping Communities Viewer Nodes",
             null,
-            FilterLibrary.ATTRIBUTES);
+            null);
+    
     
     @Override
     public Category getCategory() {
@@ -50,16 +48,17 @@ public class OcvFilterBuilder implements FilterBuilder{
     }
 
     @Override
-        public JPanel getPanel(Filter filter) {
-            //Create the panel
-            OcvFilterUI panel = new OcvFilterUI();
-            panel.setup((OcvFilterCustom) filter);
-            return panel;
-        }
+    public JPanel getPanel(Filter filter) {
+        //Create the panel
+        OcvFilterUI panel = new OcvFilterUI();
+        panel.setup((OcvFilterCustom) filter);
+        return panel;
+    }
 
-        @Override
-        public void destroy(Filter filter) {
-        }
+    @Override
+    public void destroy(Filter filter) {
+    
+    }
 
     @Override
     public Filter getFilter(Workspace workspace) {
