@@ -60,7 +60,6 @@ public class OcvFilterCustom implements ComplexFilter{
             
             for (Node node : nodes) {
                 //comunidades con mas de N nodos
-                System.out.println("Esto es community: " + node.getAttribute("isCommunity"));
                 if(!communitiesFilter.isEmpty()){
                     if(communitiesFilter.get(0).getId() == 0){
                         if(node.getAttribute("isCommunity") != null && 
@@ -74,7 +73,6 @@ public class OcvFilterCustom implements ComplexFilter{
                     }
                 }
                 //comunidades con menos de N nodos
-                System.out.println("Esto es community: " + node.getAttribute("isCommunity"));
                 if(!communitiesFilter.isEmpty()){
                     if(communitiesFilter.get(1).getId() == 1){
                         if(node.getAttribute("isCommunity") != null && 
@@ -92,24 +90,34 @@ public class OcvFilterCustom implements ComplexFilter{
                 if(!nodesFilter.isEmpty()){
                     if (nodesFilter.get(0).getId() == 0 ) {
                         //Cambiar por Contains -LowerCase
-                        if (node.getAttribute("Tags") != null && 
-                                node.getAttribute("Tags").equals(nodesFilter.get(0).getValue())) {
-                                eliminar = false;
+                        if (node.getAttribute("Tags") != null /*&& 
+                                node.getAttribute("Tags").equals(nodesFilter.get(0).getValue())*/) {
+                                String tagsCompare = node.getAttribute("Tags").toString();
+                                tagsCompare= tagsCompare.replace("<", "");
+                                tagsCompare= tagsCompare.replace(">", "");
+                                if(tagsCompare.contains(nodesFilter.get(0).getValue())){
+                                    eliminar = false;
+                                }
                         }
                     }
                 }   
-                //nodos no contengan tags
+                //nodos que no contengan tags
                 if(!nodesFilter.isEmpty()){
-                    if (nodesFilter.get(1).getId() == 1 ) {
+                    if (nodesFilter.get(0).getId() == 0 ) {
                         //Cambiar por Contains -LowerCase
-                        if (node.getAttribute("Tags") != null && 
-                                !node.getAttribute("Tags").equals(nodesFilter.get(1).getValue())) {
-                                eliminar = false;
+                        if (node.getAttribute("Tags") != null /*&& 
+                                node.getAttribute("Tags").equals(nodesFilter.get(0).getValue())*/) {
+                                String tagsCompare = node.getAttribute("Tags").toString();
+                                tagsCompare= tagsCompare.replace("<", "");
+                                tagsCompare= tagsCompare.replace(">", "");
+                                if(!tagsCompare.contains(nodesFilter.get(0).getValue())){
+                                    eliminar = false;
+                                }
                         }
                     }
                 }
                 //nodos en más de n comunidades
-                if(!nodesFilter.isEmpty()){
+                /*if(!nodesFilter.isEmpty()){
                     if (nodesFilter.get(2).getId() == 2 ) {
                         //Cambiar por Contains -LowerCase
                         if (node.getAttribute("Tags") != null && 
@@ -117,9 +125,9 @@ public class OcvFilterCustom implements ComplexFilter{
                                 eliminar = false;
                         }
                     }
-                }
+                }*/
                 //nodos en menos de n comunidades
-                if(!nodesFilter.isEmpty()){
+                /*if(!nodesFilter.isEmpty()){
                     if (nodesFilter.get(3).getId() == 3 ) {
                         //Cambiar por Contains -LowerCase
                         if (node.getAttribute("Tags") != null && 
@@ -127,7 +135,7 @@ public class OcvFilterCustom implements ComplexFilter{
                                 eliminar = false;
                         }
                     }
-                }
+                }*/
                 
                 //aristas con peso mayor a N
                 if(!aristasFilter.isEmpty()){
@@ -141,9 +149,10 @@ public class OcvFilterCustom implements ComplexFilter{
                         //TODOO: FILTRAR POR ARISTA
                     }
                 }
-                if(eliminar){
+                if(eliminar == true){
                     graph.removeNode(node);
                 }
+                eliminar = true;
             }
         }
         return graph;
