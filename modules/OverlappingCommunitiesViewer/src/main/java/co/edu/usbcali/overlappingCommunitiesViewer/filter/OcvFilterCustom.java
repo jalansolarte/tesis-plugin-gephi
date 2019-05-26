@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import org.gephi.filters.spi.ComplexFilter;
 import org.gephi.filters.spi.FilterProperty;
+import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.Node;
 
@@ -103,14 +104,14 @@ public class OcvFilterCustom implements ComplexFilter{
                 }   
                 //nodos que no contengan tags
                 if(!nodesFilter.isEmpty()){
-                    if (nodesFilter.get(0).getId() == 0 ) {
+                    if (nodesFilter.get(1).getId() == 1 ) {
                         //Cambiar por Contains -LowerCase
                         if (node.getAttribute("Tags") != null /*&& 
                                 node.getAttribute("Tags").equals(nodesFilter.get(0).getValue())*/) {
                                 String tagsCompare = node.getAttribute("Tags").toString();
                                 tagsCompare= tagsCompare.replace("<", "");
                                 tagsCompare= tagsCompare.replace(">", "");
-                                if(!tagsCompare.contains(nodesFilter.get(0).getValue())){
+                                if(!tagsCompare.contains(nodesFilter.get(1).getValue())){
                                     eliminar = false;
                                 }
                         }
@@ -137,22 +138,41 @@ public class OcvFilterCustom implements ComplexFilter{
                     }
                 }*/
                 
-                //aristas con peso mayor a N
+               
+                if(eliminar == true){
+                    graph.removeNode(node);
+                }
+                eliminar = true;
+            }
+            
+            Edge[] edges = graph.getEdges().toArray();
+            Boolean eliminarArista = true;
+            for (Edge edge : edges) {
+                
+                 //aristas con peso mayor a N
                 if(!aristasFilter.isEmpty()){
                     if(aristasFilter.get(0).getId() == 0){
-                        //TODO: FILTRAR POR ARISTA
+                        double weightFilter = Double.parseDouble(aristasFilter.get(0).getValue());
+                        int compare = Double.compare(edge.getWeight(),weightFilter);
+                        if(compare > 0){
+                            eliminarArista = false;
+                        }
                     }
                 }
                 //aristas con peso menor a N
                 if(!aristasFilter.isEmpty()){
                     if(aristasFilter.get(1).getId() == 1){
-                        //TODOO: FILTRAR POR ARISTA
+                        double weightFilter = Double.parseDouble(aristasFilter.get(1).getValue());
+                        int compare = Double.compare(edge.getWeight(),weightFilter);
+                        if(compare < 0){
+                            eliminarArista = false;
+                        }
                     }
                 }
-                if(eliminar == true){
-                    graph.removeNode(node);
+                if(eliminarArista == true){
+                    graph.removeEdge(edge);
                 }
-                eliminar = true;
+                eliminarArista = true;
             }
         }
         return graph;
