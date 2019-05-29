@@ -157,6 +157,7 @@ public class OcvGenerator implements Generator {
                     tagsStr = tagsStr.trim();
                     NodeDraft node = container.factory().newNodeDraft(nodo);
                     node.setValue("tags", tagsStr);
+                    node.setValue("belongsCommunities", 0);
                     node.setValue("isCommunity", false);
 
                     container.addNode(node);
@@ -203,19 +204,35 @@ public class OcvGenerator implements Generator {
                     community.setValue("isCommunity", true);
                     community.setSize(nodosComunidad.length);
                     container.addNode(community);
+                    
+                    //Se declaran las variables a utilizar en el ciclo
+                    EdgeDraft edge;
+                    NodeDraft node;
+                    Integer belongsCommunities;
+                    
                     for (String nodo : nodosComunidad) {
                         nodo = nodo.replaceAll("\\[", "");
                         nodo = nodo.replaceAll("\\]", "");
                         nodo = nodo.replaceAll("\n", "");
 
-                        if(container.nodeExists(nodo)){
-                            EdgeDraft edge = container.factory().newEdgeDraft();
-                            edge.setSource(community);
-                            edge.setTarget(container.getNode(nodo));
-                            edge.setWeight(0D);
-
-                            container.addEdge(edge);
+                        if(!container.nodeExists(nodo)){
+                            node = container.factory().newNodeDraft(nodo);
+                            node.setValue("tags", "");
+                            node.setValue("belongsCommunities", 0);
+                            node.setValue("isCommunity", false);
+                            container.addNode(node);
+                        }else{
+                            node = container.getNode(nodo);
                         }
+                        edge = container.factory().newEdgeDraft();
+                        edge.setSource(community);
+                        edge.setTarget(node);
+                        edge.setWeight(1D);
+                        
+                        belongsCommunities = (Integer) node.getValue("belongsCommunities");
+                        node.setValue("belongsCommunities", belongsCommunities + 1);                            
+                        container.addNode(node);
+                        container.addEdge(edge);
                     }
                     i++;
                 });
