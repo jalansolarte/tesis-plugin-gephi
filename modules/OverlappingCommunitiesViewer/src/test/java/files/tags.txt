@@ -1,0 +1,100 @@
+1 <java> <sql> <java-8> <json> <hibernate>
+2 <python>
+3 <sql> <java-8> <spring>
+4 <java-8> <spring>
+5 <pandas>
+6 <json> <spring> <jquery>
+7 <jquery> <git> <html>
+8 <spring> <jpa> <hibernate> <java>
+9 <git>
+10 <html> <css> <responsive> <bootstrap>
+11 <css> <html>
+12 <java>
+13 <java> <mongo>
+14 <mongo> <java-8>
+15 <hibernate>
+16 <javascript> <php> <laravel>
+17 <jpa-repository> <spring> <java> <java-8> <maven>
+18 <maven> <spring> <eclipse>
+19 <html> <css>
+20 <sql> <jpa>
+21 <java> <primefaces>
+22 <python> <django>
+23 <maven> 
+24 <jpa-repository>
+25 <mongo>
+26 <css>
+27 <hibernate>
+28 <java> <sql> <java-8>
+29 <java-8>
+30 <pandas> <decode>
+31 <json> <web-services>
+32 <html>
+33 <git>
+34 <git>
+35 <pandas> <embedding> <python>
+36 <mongo> <django>
+37 <java>
+38 <java>
+39 <maven> <dependency> <xml>
+40 <php> <git>
+41 <laravel> <php>
+42 <apache> <ubuntu>
+43 <tomcat> <eclipse> <spring> <java> <java-8>
+44 <spring> <java>
+45 <sql> <jpa>
+46 <oracle> <ruby>
+47 <mysql> <ruby>
+48 <sql> <spring>
+49 <jpa>
+50 <python> <bin> <importerror>
+51 <java> date>
+52 <java> <git>
+53 <java> <jpa-repository>
+54 <git> <error>
+55 <c++> <date>
+56 <java> <jpa-repository>
+57 <python> <date> 
+58 <android> <git>
+59 <xml> <android>
+60 <swift> <git>
+61 <android> <git>
+62 <swift> <schedule>
+63 <android> <jpa-repository>
+64 <android> <error>
+65 <python> <error>
+66 <c++> <error>
+67 <git>
+68 <git> <gitignore>
+69 <c++> date>
+70 <jpa-repository>
+71 <java> <schedule>
+72 <jpa-repository>
+73 <java> date>
+74 <android> <jpa-repository>
+75 <swift> <error>
+76 <python> <error>
+77 <java>
+78 <java> <android> <error> <xml> <table> <row>
+79 <jpa-repository>
+80 <android> <schedule>
+81 <c++>
+82 <android> <schedule>
+83 <swift> <error>
+84 <jpa-repository>
+85 <java> <jpa-repository>
+86 <java> <date>
+87 <git>
+88 <python>
+89 <java> <schedule> <error>
+90 <c++>
+91 <swift> <git>
+92 <android>
+93 <python> <git>
+94 <c++> <error>
+95 <c++> <git>
+96 <java> date>
+97 <git> <error>
+98 <jpa-repository> <error>
+99 <java> <git> <error>
+100 <java> <jpa-repository>

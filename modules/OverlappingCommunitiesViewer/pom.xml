@@ -83,6 +83,17 @@
             <groupId>org.gephi</groupId>
             <artifactId>filters-api</artifactId>
         </dependency>
+        
+        <!-- Layout -->
+        <dependency>
+            <groupId>org.gephi</groupId>
+            <artifactId>layout-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.gephi</groupId>
+            <artifactId>layout-plugin</artifactId>
+            <version>0.9.2</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -21,6 +21,7 @@ import org.gephi.io.importer.api.EdgeDraft;
 import org.gephi.utils.progress.Progress;
 
 import co.edu.usbcali.overlappingCommunitiesViewer.generator.model.Node;
+import java.awt.Color;
 import java.util.HashMap;
 import org.gephi.io.importer.api.EdgeWeightMergeStrategy;
 
@@ -38,7 +39,8 @@ public class OcvGenerator implements Generator {
     private File fileRelations;
     private Boolean communitiesGrouping;
     
-    private Float i = 0F;
+    private Integer count;
+    private Integer difColors;
     private Map<String, Node> nodes;
     
     @Override
@@ -60,11 +62,11 @@ public class OcvGenerator implements Generator {
             
             //Se crean las comunidades
             try {
-                i = 0F;
+                count = 0;
                 Files.readAllLines(fileCommunities.toPath()).forEach((line)->{
                     String[] nodosComunidad = line.split(", ");
 
-                    NodeDraft community = container.factory().newNodeDraft("" + i.intValue());
+                    NodeDraft community = container.factory().newNodeDraft("" + count);
                     community.setSize(nodosComunidad.length);
                     container.addNode(community);
                     
@@ -83,7 +85,7 @@ public class OcvGenerator implements Generator {
                         node.addCommunity(community);
                         nodes.put(nodo, node);
                     }
-                    i++;
+                    count++;
                 });
 
             } catch (IOException e) {
@@ -196,13 +198,27 @@ public class OcvGenerator implements Generator {
 
             //Se crean las comunidades
             try {
-                i = 0F;
+                count = 1;
+                difColors = 2;
+                int colors = 16777216;
+                
+                Files.readAllLines(fileCommunities.toPath()).forEach((line)->{
+                    difColors++;
+                });
+                
+                difColors = colors / difColors;
+                
                 Files.readAllLines(fileCommunities.toPath()).forEach((line)->{
                     String[] nodosComunidad = line.split(", ");
 
-                    NodeDraft community = container.factory().newNodeDraft("Community-" + i);
+                    NodeDraft community = container.factory().newNodeDraft("Community-" + count);
+                    
+                    Color color = new Color(count * difColors);
+                    
                     community.setValue("isCommunity", true);
                     community.setSize(nodosComunidad.length);
+                    community.setColor(color);
+                    
                     container.addNode(community);
                     
                     //Se declaran las variables a utilizar en el ciclo
@@ -215,6 +231,10 @@ public class OcvGenerator implements Generator {
                         nodo = nodo.replaceAll("\\]", "");
                         nodo = nodo.replaceAll("\n", "");
 
+                        if(nodo.isEmpty()){
+                            continue;
+                        }
+                        
                         if(!container.nodeExists(nodo)){
                             node = container.factory().newNodeDraft(nodo);
                             node.setValue("tags", "");
@@ -223,18 +243,20 @@ public class OcvGenerator implements Generator {
                             container.addNode(node);
                         }else{
                             node = container.getNode(nodo);
+                            
                         }
                         edge = container.factory().newEdgeDraft();
                         edge.setSource(community);
                         edge.setTarget(node);
-                        edge.setWeight(1D);
+                        edge.setWeight(0.1D);
                         
                         belongsCommunities = (Integer) node.getValue("belongsCommunities");
-                        node.setValue("belongsCommunities", belongsCommunities + 1);                            
+                        node.setValue("belongsCommunities", belongsCommunities + 1);
+                        node.setColor(color);
                         container.addNode(node);
                         container.addEdge(edge);
                     }
-                    i++;
+                    count++;
                 });
 
             } catch (IOException e) {
