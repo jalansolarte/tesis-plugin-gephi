@@ -21,6 +21,7 @@ import org.gephi.io.importer.api.EdgeDraft;
 import org.gephi.utils.progress.Progress;
 
 import co.edu.usbcali.overlappingCommunitiesViewer.generator.model.Node;
+import co.edu.usbcali.overlappingCommunitiesViewer.utils.Constants;
 import java.awt.Color;
 import java.util.HashMap;
 import org.gephi.io.importer.api.EdgeWeightMergeStrategy;
@@ -139,8 +140,11 @@ public class OcvGenerator implements Generator {
                 return;
             }
 
-            container.addNodeColumn("tags", String.class);
-            container.addNodeColumn("isCommunity", Boolean.class);
+            container.addNodeColumn(Constants.tagsColumn, String.class);
+            container.addNodeColumn(Constants.belongsCommunitiesColumn, Integer.class);
+            container.addNodeColumn(Constants.isCommunityColumn, Boolean.class);
+            
+            Float tamNode = 10F;
             
             //Se crean los nodos
             try {
@@ -158,10 +162,12 @@ public class OcvGenerator implements Generator {
                     }
                     tagsStr = tagsStr.trim();
                     NodeDraft node = container.factory().newNodeDraft(nodo);
-                    node.setValue("tags", tagsStr);
-                    node.setValue("belongsCommunities", 0);
-                    node.setValue("isCommunity", false);
+                    node.setValue(Constants.tagsColumn, tagsStr);
+                    node.setValue(Constants.belongsCommunitiesColumn, 0);
+                    node.setValue(Constants.isCommunityColumn, false);
 
+                    node.setSize(tamNode);
+                    
                     container.addNode(node);
                 });
             } catch (IOException e) {
@@ -188,9 +194,14 @@ public class OcvGenerator implements Generator {
                     EdgeDraft edge = container.factory().newEdgeDraft();
                     edge.setSource(node1);
                     edge.setTarget(node2);
-                    edge.setWeight(valor);
+                    edge.setWeight(valor * 10);
 
                     container.addEdge(edge);
+                    
+                    node1.setSize(node1.getSize() + tamNode);
+                    node2.setSize(node2.getSize() + tamNode);
+                    container.addNode(node1);
+                    container.addNode(node2);
                 });
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Relations File Error", JOptionPane.ERROR_MESSAGE);
@@ -215,7 +226,7 @@ public class OcvGenerator implements Generator {
                     
                     Color color = new Color(count * difColors);
                     
-                    community.setValue("isCommunity", true);
+                    community.setValue(Constants.isCommunityColumn, true);
                     community.setSize(nodosComunidad.length);
                     community.setColor(color);
                     
@@ -236,23 +247,20 @@ public class OcvGenerator implements Generator {
                         }
                         
                         if(!container.nodeExists(nodo)){
-                            node = container.factory().newNodeDraft(nodo);
-                            node.setValue("tags", "");
-                            node.setValue("belongsCommunities", 0);
-                            node.setValue("isCommunity", false);
-                            container.addNode(node);
-                        }else{
-                            node = container.getNode(nodo);
-                            
+                            continue;
                         }
+                        
+                        node = container.getNode(nodo);
+                        
                         edge = container.factory().newEdgeDraft();
                         edge.setSource(community);
                         edge.setTarget(node);
                         edge.setWeight(0.1D);
                         
-                        belongsCommunities = (Integer) node.getValue("belongsCommunities");
-                        node.setValue("belongsCommunities", belongsCommunities + 1);
+                        belongsCommunities = (Integer) node.getValue(Constants.belongsCommunitiesColumn);
+                        node.setValue(Constants.belongsCommunitiesColumn, belongsCommunities + 1);
                         node.setColor(color);
+                        
                         container.addNode(node);
                         container.addEdge(edge);
                     }

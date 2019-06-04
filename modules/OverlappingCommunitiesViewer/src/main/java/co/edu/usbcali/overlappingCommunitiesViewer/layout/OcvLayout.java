@@ -5,184 +5,328 @@
  */
 package co.edu.usbcali.overlappingCommunitiesViewer.layout;
 
+import co.edu.usbcali.overlappingCommunitiesViewer.utils.Constants;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
+import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
 import org.gephi.layout.spi.Layout;
 import org.gephi.layout.spi.LayoutBuilder;
 import org.gephi.layout.spi.LayoutProperty;
 import org.gephi.layout.plugin.AbstractLayout;
-import org.gephi.layout.plugin.ForceVectorNodeLayoutData;
-import org.gephi.layout.plugin.ForceVectorUtils;
+import org.gephi.layout.plugin.forceAtlas2.ForceAtlas2LayoutData;
+import org.gephi.layout.plugin.forceAtlas2.ForceFactory;
+import org.gephi.layout.plugin.forceAtlas2.NodesThread;
+import org.gephi.layout.plugin.forceAtlas2.Region;
 
 /**
  *
  * @author CamiloDelgado
  */
-public class OcvLayout extends AbstractLayout implements Layout {
-
+public class OcvLayout implements Layout {
+    
     //Graph
-    protected Graph graph;
-    //Flag
-    private boolean executing = false;
+    private GraphModel graphModel;
+    private Graph graph;
+    private final OcvLayoutBuilder layoutBuilder;
+    
     //Properties
-    private double inertia;
-    private double repulsionStrength;
-    private double attractionStrength;
-    private double maxDisplacement;
-    private boolean freezeBalance;
-    private double freezeStrength;
-    private double freezeInertia;
+    private double edgeWeightInfluence;
+    private double jitterTolerance;
+    private double scalingRatio;
     private double gravity;
     private double speed;
-    private double cooling;
+    private double speedEfficiency;
     private boolean outboundAttractionDistribution;
     private boolean adjustSizes;
+    private boolean barnesHutOptimize;
+    private double barnesHutTheta;
+    private boolean linLogMode;
+    private boolean strongGravityMode;
+    private int threadCount;
+    private int currentThreadCount;
     
-    public OcvLayout(LayoutBuilder builder) {
-        super(builder);
+    //Utils
+    double outboundAttCompensation = 1;
+    private ExecutorService pool;
+    private Region rootRegion;
+    
+    //Communities
+    private Map<List<Node>, Integer> communitiesMap;
+    int countMass;
+
+    public OcvLayout(OcvLayoutBuilder layoutBuilder) {
+        this.layoutBuilder = layoutBuilder;
+        this.threadCount = Math.min(4, Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
+        countMass = 1;
     }
 
     @Override
     public void initAlgo() {
-        executing = true;
-        ensureSafeLayoutNodePositions(graphModel);
-    }
-    
-    @Override
-    public boolean canAlgo() {
-        return executing;
+        AbstractLayout.ensureSafeLayoutNodePositions(graphModel);
+        
+        speed = 1.;
+        speedEfficiency = 1.;
+
+        graph = graphModel.getGraphVisible();
+
+        graph.readLock();
+        try {
+            Node[] nodes = graph.getNodes().toArray();
+
+            communitiesMap = new HashMap<>();
+            
+            // Initialise layout data
+            ForceAtlas2LayoutData nLayout;
+            
+            for (Node n : nodes) {
+                if((boolean)n.getAttribute(Constants.isCommunityColumn)){
+                    continue;
+                }
+                if (n.getLayoutData() == null || !(n.getLayoutData() instanceof ForceAtlas2LayoutData)) {
+                    nLayout = new ForceAtlas2LayoutData();
+                    
+                    Edge[] relations = graph.getEdges(n).toArray();
+                    List<Node> communities = new ArrayList<>();
+                    for (Edge relation : relations) {
+                        Node node = relation.getSource();
+                        if((boolean)node.getAttribute(Constants.isCommunityColumn)){
+                            communities.add(node);
+                        }
+                    }
+
+                    if(communitiesMap.containsKey(communities)){
+                        nLayout.mass = communitiesMap.get(communities);
+                    }else{
+                        nLayout.mass = countMass;
+                        communitiesMap.put(communities, countMass);
+                        countMass++;
+                    }
+                    nLayout.old_dx = 0;
+                    nLayout.old_dy = 0;
+                    nLayout.dx = 0;
+                    nLayout.dy = 0;
+                    n.setLayoutData(nLayout);
+                }
+            }
+            
+            pool = Executors.newFixedThreadPool(threadCount);
+            currentThreadCount = threadCount;
+        } finally {
+            graph.readUnlockAll();
+        }
     }
 
     @Override
     public void goAlgo() {
-        this.graph = graphModel.getGraphVisible();
+        // Initialize graph data
+        if (graphModel == null) {
+            return;
+        }
+        graph = graphModel.getGraphVisible();
         graph.readLock();
         
         try {
             Node[] nodes = graph.getNodes().toArray();
             Edge[] edges = graph.getEdges().toArray();
 
+            // Initialise layout data
+            ForceAtlas2LayoutData nLayout;
             for (Node n : nodes) {
-                if (n.getLayoutData() == null || !(n.getLayoutData() instanceof ForceVectorNodeLayoutData)) {
-                    n.setLayoutData(new ForceVectorNodeLayoutData());
+                if((boolean)n.getAttribute(Constants.isCommunityColumn)){
+                    graph.readUnlock();
+                    graph.removeNode(n);
+                    graph.readLock();
+                    continue;
+                }
+                
+                if (n.getLayoutData() == null || !(n.getLayoutData() instanceof ForceAtlas2LayoutData)) {
+                    nLayout = new ForceAtlas2LayoutData();
+                    
+                    Edge[] relations = graph.getEdges(n).toArray();
+                    List<Node> communities = new ArrayList<>();
+                    for (Edge relation : relations) {
+                        Node node = relation.getSource();
+                        if((boolean)node.getAttribute(Constants.isCommunityColumn)){
+                            communities.add(node);
+                        }
+                    }
+
+                    if(communitiesMap.containsKey(communities)){
+                        nLayout.mass = communitiesMap.get(communities);
+                    }else{
+                        nLayout.mass = countMass;
+                        communitiesMap.put(communities, countMass);
+                        countMass++;
+
+                    }
+
+                    nLayout.old_dx = 0;
+                    nLayout.old_dy = 0;
+                    nLayout.dx = 0;
+                    nLayout.dy = 0;
+                    n.setLayoutData(nLayout);
                 }
             }
 
-            for (Node n : nodes) {
-                ForceVectorNodeLayoutData layoutData = n.getLayoutData();
-                layoutData.old_dx = layoutData.dx;
-                layoutData.old_dy = layoutData.dy;
-                layoutData.dx *= inertia;
-                layoutData.dy *= inertia;
+            nodes = graph.getNodes().toArray();
+            edges = graph.getEdges().toArray();
+            
+            // If Barnes Hut active, initialize root region
+            if (isBarnesHutOptimize()) {
+                rootRegion = new Region(nodes);
+                rootRegion.buildSubRegions();
             }
-            // repulsion
-            if (isAdjustSizes()) {
-                for (Node n1 : nodes) {
-                    for (Node n2 : nodes) {
-                        if (n1 != n2) {
-                            ForceVectorUtils.fcBiRepulsor_noCollide(n1, n2, getRepulsionStrength() * (1 + graph.getDegree(n1)) * (1 + graph.getDegree(n2)));
-                        }
-                    }
-                }
-            } else {
-                for (Node n1 : nodes) {
-                    for (Node n2 : nodes) {
-                        if (n1 != n2) {
-                            ForceVectorUtils.fcBiRepulsor(n1, n2, getRepulsionStrength() * (1 + graph.getDegree(n1)) * (1 + graph.getDegree(n2)));
-                        }
-                    }
-                }
-            }
-            // attraction
-            if (isAdjustSizes()) {
-                if (isOutboundAttractionDistribution()) {
-                    for (Edge e : edges) {
-                        Node nf = e.getSource();
-                        Node nt = e.getTarget();
-                        double bonus = (nf.isFixed() || nt.isFixed()) ? (100) : (1);
-                        bonus *= e.getWeight();
-                        ForceVectorUtils.fcBiAttractor_noCollide(nf, nt, bonus * getAttractionStrength() / (1 + graph.getDegree(nf)));
-                    }
-                } else {
-                    for (Edge e : edges) {
-                        Node nf = e.getSource();
-                        Node nt = e.getTarget();
-                        double bonus = (nf.isFixed() || nt.isFixed()) ? (100) : (1);
-                        bonus *= e.getWeight();
-                        ForceVectorUtils.fcBiAttractor_noCollide(nf, nt, bonus * getAttractionStrength());
-                    }
-                }
-            } else {
-                if (isOutboundAttractionDistribution()) {
-                    for (Edge e : edges) {
-                        Node nf = e.getSource();
-                        Node nt = e.getTarget();
-                        double bonus = (nf.isFixed() || nt.isFixed()) ? (100) : (1);
-                        bonus *= e.getWeight();
-                        ForceVectorUtils.fcBiAttractor(nf, nt, bonus * getAttractionStrength() / (1 + graph.getDegree(nf)));
-                    }
-                } else {
-                    for (Edge e : edges) {
-                        Node nf = e.getSource();
-                        Node nt = e.getTarget();
-                        double bonus = (nf.isFixed() || nt.isFixed()) ? (100) : (1);
-                        bonus *= e.getWeight();
-                        ForceVectorUtils.fcBiAttractor(nf, nt, bonus * getAttractionStrength());
-                    }
-                }
-            }
-            // gravity
-            for (Node n : nodes) {
 
-                float nx = n.x();
-                float ny = n.y();
-                double d = 0.0001 + Math.sqrt(nx * nx + ny * ny);
-                double gf = 0.0001 * getGravity() * d;
-                ForceVectorNodeLayoutData layoutData = n.getLayoutData();
-                layoutData.dx -= gf * nx / d;
-                layoutData.dy -= gf * ny / d;
-            }
-            // speed
-            if (isFreezeBalance()) {
+            // If outboundAttractionDistribution active, compensate.
+            if (isOutboundAttractionDistribution()) {
+                outboundAttCompensation = 0;
                 for (Node n : nodes) {
-                    ForceVectorNodeLayoutData layoutData = n.getLayoutData();
-                    layoutData.dx *= getSpeed() * 10f;
-                    layoutData.dy *= getSpeed() * 10f;
+                    nLayout = n.getLayoutData();
+                    outboundAttCompensation += nLayout.mass;
+                }
+                outboundAttCompensation /= nodes.length;
+            }
+
+            // Repulsion (and gravity)
+            // NB: Muti-threaded
+            ForceFactory.RepulsionForce Repulsion = ForceFactory.builder.buildRepulsion(isAdjustSizes(), getScalingRatio());
+
+            int taskCount = 8 * currentThreadCount;  // The threadPool Executor Service will manage the fetching of tasks and threads.
+            // We make more tasks than threads because some tasks may need more time to compute.
+            ArrayList<Future> threads = new ArrayList();
+            for (int t = taskCount; t > 0; t--) {
+                int from = (int) Math.floor(nodes.length * (t - 1) / taskCount);
+                int to = (int) Math.floor(nodes.length * t / taskCount);
+                Future future = pool.submit(new NodesThread(nodes, from, to, isBarnesHutOptimize(), getBarnesHutTheta(), getGravity(), (isStrongGravityMode()) ? (ForceFactory.builder.getStrongGravity(getScalingRatio())) : (Repulsion), getScalingRatio(), rootRegion, Repulsion));
+                threads.add(future);
+            }
+            for (Future future : threads) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    throw new RuntimeException("Unable to layout " + this.getClass().getSimpleName() + ".", e);
+                }
+            }
+
+            // Attraction
+            ForceFactory.AttractionForce Attraction = ForceFactory.builder.buildAttraction(isLinLogMode(), isOutboundAttractionDistribution(), isAdjustSizes(), 1 * ((isOutboundAttractionDistribution()) ? (outboundAttCompensation) : (1)));
+            if (getEdgeWeightInfluence() == 0) {
+                for (Edge e : edges) {
+                    Attraction.apply(e.getSource(), e.getTarget(), 1);
+                }
+            } else if (getEdgeWeightInfluence() == 1) {
+                for (Edge e : edges) {
+                    Attraction.apply(e.getSource(), e.getTarget(), e.getWeight());
                 }
             } else {
-                for (Node n : nodes) {
-                    ForceVectorNodeLayoutData layoutData = n.getLayoutData();
-                    layoutData.dx *= getSpeed();
-                    layoutData.dy *= getSpeed();
+                for (Edge e : edges) {
+                    Attraction.apply(e.getSource(), e.getTarget(), Math.pow(e.getWeight(), getEdgeWeightInfluence()));
                 }
             }
-            // apply forces
+
+            // Auto adjust speed
+            double totalSwinging = 0d;  // How much irregular movement
+            double totalEffectiveTraction = 0d;  // Hom much useful movement
             for (Node n : nodes) {
-                ForceVectorNodeLayoutData nLayout = n.getLayoutData();
+                nLayout = n.getLayoutData();
                 if (!n.isFixed()) {
-                    double d = 0.0001 + Math.sqrt(nLayout.dx * nLayout.dx + nLayout.dy * nLayout.dy);
-                    float ratio;
-                    if (isFreezeBalance()) {
-                        nLayout.freeze = (float) (getFreezeInertia() * nLayout.freeze + (1 - getFreezeInertia()) * 0.1 * getFreezeStrength() * (Math.sqrt(Math.sqrt((nLayout.old_dx - nLayout.dx) * (nLayout.old_dx - nLayout.dx) + (nLayout.old_dy - nLayout.dy) * (nLayout.old_dy - nLayout.dy)))));
-                        ratio = (float) Math.min((d / (d * (1f + nLayout.freeze))), getMaxDisplacement() / d);
-                    } else {
-                        ratio = (float) Math.min(1, getMaxDisplacement() / d);
-                    }
-                    nLayout.dx *= ratio / getCooling();
-                    nLayout.dy *= ratio / getCooling();
-                    float x = n.x() + nLayout.dx;
-                    float y = n.y() + nLayout.dy;
+                    double swinging = Math.sqrt(Math.pow(nLayout.old_dx - nLayout.dx, 2) + Math.pow(nLayout.old_dy - nLayout.dy, 2));
+                    totalSwinging += nLayout.mass * swinging;   // If the node has a burst change of direction, then it's not converging.
+                    totalEffectiveTraction += nLayout.mass * 0.5 * Math.sqrt(Math.pow(nLayout.old_dx + nLayout.dx, 2) + Math.pow(nLayout.old_dy + nLayout.dy, 2));
+                }
+            }
+            // We want that swingingMovement < tolerance * convergenceMovement
 
-                    n.setX(x);
-                    n.setY(y);
+            // Optimize jitter tolerance
+            // The 'right' jitter tolerance for this network. Bigger networks need more tolerance. Denser networks need less tolerance. Totally empiric.
+            double estimatedOptimalJitterTolerance = 0.05 * Math.sqrt(nodes.length);
+            double minJT = Math.sqrt(estimatedOptimalJitterTolerance);
+            double maxJT = 10;
+            double jt = jitterTolerance * Math.max(minJT, Math.min(maxJT, estimatedOptimalJitterTolerance * totalEffectiveTraction / Math.pow(nodes.length, 2)));
+
+            double minSpeedEfficiency = 0.05;
+
+            // Protection against erratic behavior
+            if (totalSwinging / totalEffectiveTraction > 2.0) {
+                if (speedEfficiency > minSpeedEfficiency) {
+                    speedEfficiency *= 0.5;
+                }
+                jt = Math.max(jt, jitterTolerance);
+            }
+
+            double targetSpeed = jt * speedEfficiency * totalEffectiveTraction / totalSwinging;
+
+            // Speed efficiency is how the speed really corresponds to the swinging vs. convergence tradeoff
+            // We adjust it slowly and carefully
+            if (totalSwinging > jt * totalEffectiveTraction) {
+                if (speedEfficiency > minSpeedEfficiency) {
+                    speedEfficiency *= 0.7;
+                }
+            } else if (speed < 1000) {
+                speedEfficiency *= 1.3;
+            }
+
+            // But the speed shoudn't rise too much too quickly, since it would make the convergence drop dramatically.
+            double maxRise = 0.5;   // Max rise: 50%
+            speed = speed + Math.min(targetSpeed - speed, maxRise * speed);
+
+            // Apply forces
+            if (isAdjustSizes()) {
+                // If nodes overlap prevention is active, it's not possible to trust the swinging mesure.
+                for (Node n : nodes) {
+                    nLayout = n.getLayoutData();
+                    if (!n.isFixed()) {
+
+                        // Adaptive auto-speed: the speed of each node is lowered
+                        // when the node swings.
+                        double swinging = nLayout.mass * Math.sqrt((nLayout.old_dx - nLayout.dx) * (nLayout.old_dx - nLayout.dx) + (nLayout.old_dy - nLayout.dy) * (nLayout.old_dy - nLayout.dy));
+                        double factor = 0.1 * speed / (1f + Math.sqrt(speed * swinging));
+
+                        double df = Math.sqrt(Math.pow(nLayout.dx, 2) + Math.pow(nLayout.dy, 2));
+                        factor = Math.min(factor * df, 10.) / df;
+
+                        double x = n.x() + nLayout.dx * factor;
+                        double y = n.y() + nLayout.dy * factor;
+
+                        n.setX((float) x);
+                        n.setY((float) y);
+                    }
+                }
+            } else {
+                for (Node n : nodes) {
+                    nLayout = n.getLayoutData();
+                    if (!n.isFixed()) {
+
+                        // Adaptive auto-speed: the speed of each node is lowered
+                        // when the node swings.
+                        double swinging = nLayout.mass * Math.sqrt((nLayout.old_dx - nLayout.dx) * (nLayout.old_dx - nLayout.dx) + (nLayout.old_dy - nLayout.dy) * (nLayout.old_dy - nLayout.dy));
+                        //double factor = speed / (1f + Math.sqrt(speed * swinging));
+                        double factor = speed / (1f + Math.sqrt(speed * swinging));
+
+                        double x = n.x() + nLayout.dx * factor;
+                        double y = n.y() + nLayout.dy * factor;
+
+                        n.setX((float) x);
+                        n.setY((float) y);
+                    }
                 }
             }
         } finally {
             graph.readUnlockAll();
         }
+    }
+
+    @Override
+    public boolean canAlgo() {
+        return graphModel != null;
     }
 
     @Override
@@ -192,202 +336,149 @@ public class OcvLayout extends AbstractLayout implements Layout {
             for (Node n : graph.getNodes()) {
                 n.setLayoutData(null);
             }
+            pool.shutdown();
         } finally {
             graph.readUnlockAll();
         }
-        executing = false;
     }
 
     @Override
     public LayoutProperty[] getProperties() {
         List<LayoutProperty> properties = new ArrayList<>();
-        
         return properties.toArray(new LayoutProperty[0]);
     }
 
     @Override
     public void resetPropertiesValues() {
-        setInertia(0.1);
-        setRepulsionStrength(200d);
-        setAttractionStrength(10d);
-        setMaxDisplacement(10d);
-        setFreezeBalance(true);
-        setFreezeStrength(80d);
-        setFreezeInertia(0.2);
-        setGravity(30d);
+        int nodesCount = 0;
+
+        if (graphModel != null) {
+            nodesCount = graphModel.getGraphVisible().getNodeCount();
+        }
+
+        // Tuning
+        if (nodesCount >= 100) {
+            setScalingRatio(2.0);
+        } else {
+            setScalingRatio(10.0);
+        }
+        setStrongGravityMode(false);
+        setGravity(10.);
+
+        // Behavior
         setOutboundAttractionDistribution(false);
-        setAdjustSizes(false);
-        setSpeed(1d);
-        setCooling(1d);
+        setLinLogMode(false);
+        setAdjustSizes(true);
+        setEdgeWeightInfluence(0D);
+
+        // Performance
+        setJitterTolerance(1D);
+        if (nodesCount >= 1000) {
+            setBarnesHutOptimize(true);
+        } else {
+            setBarnesHutOptimize(false);
+        }
+        setBarnesHutTheta(1.2);
+        setThreadsCount(Math.max(1, Runtime.getRuntime().availableProcessors() - 1));
     }
 
-    /**
-     * @return the inertia
-     */
-    public double getInertia() {
-        return inertia;
+    @Override
+    public LayoutBuilder getBuilder() {
+        return layoutBuilder;
     }
 
-    /**
-     * @param inertia the inertia to set
-     */
-    public void setInertia(double inertia) {
-        this.inertia = inertia;
+    @Override
+    public void setGraphModel(GraphModel graphModel) {
+        this.graphModel = graphModel;
+        // Trick: reset here to take the profile of the graph in account for default values
+        resetPropertiesValues();
     }
 
-    /**
-     * @return the repulsionStrength
-     */
-    public double getRepulsionStrength() {
-        return repulsionStrength;
+    public Double getBarnesHutTheta() {
+        return barnesHutTheta;
     }
 
-    /**
-     * @param repulsionStrength the repulsionStrength to set
-     */
-    public void setRepulsionStrength(double repulsionStrength) {
-        this.repulsionStrength = repulsionStrength;
+    public void setBarnesHutTheta(Double barnesHutTheta) {
+        this.barnesHutTheta = barnesHutTheta;
     }
 
-    /**
-     * @return the attractionStrength
-     */
-    public double getAttractionStrength() {
-        return attractionStrength;
+    public Double getEdgeWeightInfluence() {
+        return edgeWeightInfluence;
     }
 
-    /**
-     * @param attractionStrength the attractionStrength to set
-     */
-    public void setAttractionStrength(double attractionStrength) {
-        this.attractionStrength = attractionStrength;
+    public void setEdgeWeightInfluence(Double edgeWeightInfluence) {
+        this.edgeWeightInfluence = edgeWeightInfluence;
     }
 
-    /**
-     * @return the maxDisplacement
-     */
-    public double getMaxDisplacement() {
-        return maxDisplacement;
+    public Double getJitterTolerance() {
+        return jitterTolerance;
     }
 
-    /**
-     * @param maxDisplacement the maxDisplacement to set
-     */
-    public void setMaxDisplacement(double maxDisplacement) {
-        this.maxDisplacement = maxDisplacement;
+    public void setJitterTolerance(Double jitterTolerance) {
+        this.jitterTolerance = jitterTolerance;
     }
 
-    /**
-     * @return the freezeBalance
-     */
-    public boolean isFreezeBalance() {
-        return freezeBalance;
+    public Boolean isLinLogMode() {
+        return linLogMode;
     }
 
-    /**
-     * @param freezeBalance the freezeBalance to set
-     */
-    public void setFreezeBalance(boolean freezeBalance) {
-        this.freezeBalance = freezeBalance;
+    public void setLinLogMode(Boolean linLogMode) {
+        this.linLogMode = linLogMode;
     }
 
-    /**
-     * @return the freezeStrength
-     */
-    public double getFreezeStrength() {
-        return freezeStrength;
+    public Double getScalingRatio() {
+        return scalingRatio;
     }
 
-    /**
-     * @param freezeStrength the freezeStrength to set
-     */
-    public void setFreezeStrength(double freezeStrength) {
-        this.freezeStrength = freezeStrength;
+    public void setScalingRatio(Double scalingRatio) {
+        this.scalingRatio = scalingRatio;
     }
 
-    /**
-     * @return the freezeInertia
-     */
-    public double getFreezeInertia() {
-        return freezeInertia;
+    public Boolean isStrongGravityMode() {
+        return strongGravityMode;
     }
 
-    /**
-     * @param freezeInertia the freezeInertia to set
-     */
-    public void setFreezeInertia(double freezeInertia) {
-        this.freezeInertia = freezeInertia;
+    public void setStrongGravityMode(Boolean strongGravityMode) {
+        this.strongGravityMode = strongGravityMode;
     }
 
-    /**
-     * @return the gravity
-     */
-    public double getGravity() {
+    public Double getGravity() {
         return gravity;
     }
 
-    /**
-     * @param gravity the gravity to set
-     */
-    public void setGravity(double gravity) {
+    public void setGravity(Double gravity) {
         this.gravity = gravity;
     }
 
-    /**
-     * @return the speed
-     */
-    public double getSpeed() {
-        return speed;
+    public Integer getThreadsCount() {
+        return threadCount;
     }
 
-    /**
-     * @param speed the speed to set
-     */
-    public void setSpeed(double speed) {
-        this.speed = speed;
+    public void setThreadsCount(Integer threadCount) {
+        this.threadCount = Math.max(1, threadCount);
     }
 
-    /**
-     * @return the cooling
-     */
-    public double getCooling() {
-        return cooling;
-    }
-
-    /**
-     * @param cooling the cooling to set
-     */
-    public void setCooling(double cooling) {
-        this.cooling = cooling;
-    }
-
-    /**
-     * @return the outboundAttractionDistribution
-     */
-    public boolean isOutboundAttractionDistribution() {
+    public Boolean isOutboundAttractionDistribution() {
         return outboundAttractionDistribution;
     }
 
-    /**
-     * @param outboundAttractionDistribution the outboundAttractionDistribution to set
-     */
-    public void setOutboundAttractionDistribution(boolean outboundAttractionDistribution) {
+    public void setOutboundAttractionDistribution(Boolean outboundAttractionDistribution) {
         this.outboundAttractionDistribution = outboundAttractionDistribution;
     }
 
-    /**
-     * @return the adjustSizes
-     */
-    public boolean isAdjustSizes() {
+    public Boolean isAdjustSizes() {
         return adjustSizes;
     }
 
-    /**
-     * @param adjustSizes the adjustSizes to set
-     */
-    public void setAdjustSizes(boolean adjustSizes) {
+    public void setAdjustSizes(Boolean adjustSizes) {
         this.adjustSizes = adjustSizes;
     }
-    
-    
+
+    public Boolean isBarnesHutOptimize() {
+        return barnesHutOptimize;
+    }
+
+    public void setBarnesHutOptimize(Boolean barnesHutOptimize) {
+        this.barnesHutOptimize = barnesHutOptimize;
+    }
 }
