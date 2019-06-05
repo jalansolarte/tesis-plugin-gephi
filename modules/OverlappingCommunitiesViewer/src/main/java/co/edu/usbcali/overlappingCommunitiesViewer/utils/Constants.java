@@ -11,6 +11,6 @@ package co.edu.usbcali.overlappingCommunitiesViewer.utils;
  */
 public class Constants {
     public static String tagsColumn = "tags";
-    public static String isCommunityColumn = "isCommunity";
     public static String belongsCommunitiesColumn = "belongsCommunities";
+    public static String countNodesColumn = "countNodes";
 }

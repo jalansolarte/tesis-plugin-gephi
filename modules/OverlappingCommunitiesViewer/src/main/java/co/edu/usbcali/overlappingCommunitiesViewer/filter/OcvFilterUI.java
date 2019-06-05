@@ -20,7 +20,6 @@ public class OcvFilterUI extends javax.swing.JPanel{
 
     private OcvFilterCustom filter;
     OptionsFilter optionsFilter = new OptionsFilter();
-    OptionsFilter optionsFilterCommunity = new OptionsFilter();
     OptionsFilter optionsFilterEdge = new OptionsFilter();
     
     /**
@@ -44,11 +43,6 @@ public class OcvFilterUI extends javax.swing.JPanel{
     private void initComponents() {
 
         pnlFiltros = new javax.swing.JTabbedPane();
-        pnlComunidades = new javax.swing.JPanel();
-        lblMasNodos = new javax.swing.JLabel();
-        txtMasNodos = new javax.swing.JTextField();
-        lblMenosNodos = new javax.swing.JLabel();
-        txtMenosNodos = new javax.swing.JTextField();
         pnlNodos = new javax.swing.JPanel();
         lblConTags = new javax.swing.JLabel();
         txtConTags = new javax.swing.JTextField();
@@ -65,55 +59,6 @@ public class OcvFilterUI extends javax.swing.JPanel{
         txtMenosPeso = new javax.swing.JTextField();
         btnFiltros = new javax.swing.JButton();
         btnCleanFiltros = new javax.swing.JButton();
-
-        org.openide.awt.Mnemonics.setLocalizedText(lblMasNodos, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.lblMasNodos.text")); // NOI18N
-
-        txtMasNodos.setText(org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.txtMasNodos.text")); // NOI18N
-        txtMasNodos.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtMasNodosKeyTyped(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(lblMenosNodos, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.lblMenosNodos.text")); // NOI18N
-
-        txtMenosNodos.setText(org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.txtMenosNodos.text")); // NOI18N
-        txtMenosNodos.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtMenosNodosKeyTyped(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlComunidadesLayout = new javax.swing.GroupLayout(pnlComunidades);
-        pnlComunidades.setLayout(pnlComunidadesLayout);
-        pnlComunidadesLayout.setHorizontalGroup(
-            pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlComunidadesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblMasNodos)
-                    .addComponent(lblMenosNodos))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                .addGroup(pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtMasNodos, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
-                    .addComponent(txtMenosNodos))
-                .addContainerGap())
-        );
-        pnlComunidadesLayout.setVerticalGroup(
-            pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlComunidadesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMasNodos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMasNodos))
-                .addGap(18, 18, 18)
-                .addGroup(pnlComunidadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMenosNodos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMenosNodos))
-                .addContainerGap(103, Short.MAX_VALUE))
-        );
-
-        pnlFiltros.addTab(org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.pnlComunidades.TabConstraints.tabTitle"), pnlComunidades); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lblConTags, org.openide.util.NbBundle.getMessage(OcvFilterUI.class, "OcvFilterUI.lblConTags.text")); // NOI18N
 
@@ -152,7 +97,7 @@ public class OcvFilterUI extends javax.swing.JPanel{
                     .addComponent(lblSinTags)
                     .addComponent(lblMasComunidades)
                     .addComponent(lblMenosComunidades))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(pnlNodosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtMenosComunidades, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                     .addComponent(txtMasComunidades)
@@ -211,7 +156,7 @@ public class OcvFilterUI extends javax.swing.JPanel{
                 .addGroup(pnlAristasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlAristasLayout.createSequentialGroup()
                         .addComponent(lblMenosPeso)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                         .addComponent(txtMenosPeso, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlAristasLayout.createSequentialGroup()
                         .addComponent(lblMasPeso)
@@ -259,9 +204,9 @@ public class OcvFilterUI extends javax.swing.JPanel{
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFiltros)
-                .addGap(18, 18, 18)
                 .addComponent(btnCleanFiltros)
+                .addGap(18, 18, 18)
+                .addComponent(btnFiltros)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -276,24 +221,6 @@ public class OcvFilterUI extends javax.swing.JPanel{
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void txtMasNodosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMasNodosKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-            getToolkit().beep();
-            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtMasNodosKeyTyped
-
-    private void txtMenosNodosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMenosNodosKeyTyped
-        char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE))) {
-            getToolkit().beep();
-            JOptionPane.showMessageDialog(null,"No puede ingresar letras!!!","Ventana Error Datos",JOptionPane.ERROR_MESSAGE);
-            evt.consume();
-        }
-    }//GEN-LAST:event_txtMenosNodosKeyTyped
 
     private void txtMasComunidadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMasComunidadesKeyTyped
         char c = evt.getKeyChar();
@@ -334,27 +261,20 @@ public class OcvFilterUI extends javax.swing.JPanel{
     }//GEN-LAST:event_txtMenosPesoKeyTyped
 
     private void btnFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFiltrosActionPerformed
-        List<FiltersValues> filtroComunidades = validarFiltrosComunidades();
         List<FiltersValues> filtroNodos = validarFiltrosNodos();
         List<FiltersValues> filtroAristas = validarFiltrosAristas();
     
-    
-        if(filtroComunidades.isEmpty() && filtroNodos.isEmpty() && filtroAristas.isEmpty()){
+        if(filtroNodos.isEmpty() && filtroAristas.isEmpty()){
             JOptionPane.showMessageDialog(this, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
-            filter.setCommunitiesFilter(filtroComunidades);
             filter.setNodesFilter(filtroNodos);
             filter.setAristasFilter(filtroAristas);
             filter.setOptionsFilter(optionsFilter);
-            filter.setOptionsFilterCommunity(optionsFilterCommunity);
             filter.setOptionsFilterEdge(optionsFilterEdge);
         }
     }//GEN-LAST:event_btnFiltrosActionPerformed
 
     private void btnCleanFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanFiltrosActionPerformed
-        txtMasNodos.setText("");
-        txtMenosNodos.setText("");
-        
         txtConTags.setText("");
         txtSinTags.setText("");
         txtMasComunidades.setText("");
@@ -363,41 +283,6 @@ public class OcvFilterUI extends javax.swing.JPanel{
         txtMasPeso.setText("");
         txtMenosPeso.setText("");
     }//GEN-LAST:event_btnCleanFiltrosActionPerformed
-
-    public List<FiltersValues> validarFiltrosComunidades(){
-        List<FiltersValues> cfilters = new ArrayList<>();
-        //Comunidades
-        String masNodos = txtMasNodos.getText();
-        String menosNodos = txtMenosNodos.getText();
-        
-        if(!masNodos.equals("")){
-            FiltersValues cf = new FiltersValues();
-            cf.setId(0);
-            cf.setValue(masNodos);
-            cfilters.add(cf);
-            optionsFilterCommunity.setOption1(1);
-        }else if(masNodos.equals("")){
-            FiltersValues cf = new FiltersValues();
-            cf.setId(3);
-            cf.setValue("NOT VALUE");
-            cfilters.add(cf);
-            optionsFilterCommunity.setOption1(0);
-        }
-        if(!menosNodos.equals("")){
-            FiltersValues cf = new FiltersValues();
-            cf.setId(1);
-            cf.setValue(menosNodos);
-            cfilters.add(cf);
-            optionsFilterCommunity.setOption2(1);
-        }else if(menosNodos.equals("")){
-            FiltersValues cf = new FiltersValues();
-            cf.setId(3);
-            cf.setValue("NOT VALUE");
-            cfilters.add(cf);
-            optionsFilterCommunity.setOption2(0);
-        }
-        return cfilters;
-    }
     
     public List<FiltersValues> validarFiltrosNodos(){
         
@@ -506,22 +391,17 @@ public class OcvFilterUI extends javax.swing.JPanel{
     private javax.swing.JButton btnFiltros;
     private javax.swing.JLabel lblConTags;
     private javax.swing.JLabel lblMasComunidades;
-    private javax.swing.JLabel lblMasNodos;
     private javax.swing.JLabel lblMasPeso;
     private javax.swing.JLabel lblMenosComunidades;
-    private javax.swing.JLabel lblMenosNodos;
     private javax.swing.JLabel lblMenosPeso;
     private javax.swing.JLabel lblSinTags;
     private javax.swing.JPanel pnlAristas;
-    private javax.swing.JPanel pnlComunidades;
     private javax.swing.JTabbedPane pnlFiltros;
     private javax.swing.JPanel pnlNodos;
     private javax.swing.JTextField txtConTags;
     private javax.swing.JTextField txtMasComunidades;
-    private javax.swing.JTextField txtMasNodos;
     private javax.swing.JTextField txtMasPeso;
     private javax.swing.JTextField txtMenosComunidades;
-    private javax.swing.JTextField txtMenosNodos;
     private javax.swing.JTextField txtMenosPeso;
     private javax.swing.JTextField txtSinTags;
     // End of variables declaration//GEN-END:variables

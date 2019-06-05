@@ -87,9 +87,9 @@ public class OcvLayout implements Layout {
             ForceAtlas2LayoutData nLayout;
             
             for (Node n : nodes) {
-                if((boolean)n.getAttribute(Constants.isCommunityColumn)){
-                    continue;
-                }
+                //if((boolean)n.getAttribute(Constants.isCommunityColumn)){
+                  //  continue;
+                //}
                 if (n.getLayoutData() == null || !(n.getLayoutData() instanceof ForceAtlas2LayoutData)) {
                     nLayout = new ForceAtlas2LayoutData();
                     
@@ -97,9 +97,9 @@ public class OcvLayout implements Layout {
                     List<Node> communities = new ArrayList<>();
                     for (Edge relation : relations) {
                         Node node = relation.getSource();
-                        if((boolean)node.getAttribute(Constants.isCommunityColumn)){
-                            communities.add(node);
-                        }
+//                        if((boolean)node.getAttribute(Constants.isCommunityColumn)){
+//                            communities.add(node);
+//                        }
                     }
 
                     if(communitiesMap.containsKey(communities)){
@@ -140,12 +140,6 @@ public class OcvLayout implements Layout {
             // Initialise layout data
             ForceAtlas2LayoutData nLayout;
             for (Node n : nodes) {
-                if((boolean)n.getAttribute(Constants.isCommunityColumn)){
-                    graph.readUnlock();
-                    graph.removeNode(n);
-                    graph.readLock();
-                    continue;
-                }
                 
                 if (n.getLayoutData() == null || !(n.getLayoutData() instanceof ForceAtlas2LayoutData)) {
                     nLayout = new ForceAtlas2LayoutData();
@@ -154,9 +148,9 @@ public class OcvLayout implements Layout {
                     List<Node> communities = new ArrayList<>();
                     for (Edge relation : relations) {
                         Node node = relation.getSource();
-                        if((boolean)node.getAttribute(Constants.isCommunityColumn)){
+                        //if((boolean)node.getAttribute(Constants.isCommunityColumn)){
                             communities.add(node);
-                        }
+                        //}
                     }
 
                     if(communitiesMap.containsKey(communities)){

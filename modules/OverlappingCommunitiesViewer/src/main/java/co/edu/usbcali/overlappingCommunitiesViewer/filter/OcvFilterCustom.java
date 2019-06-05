@@ -25,11 +25,9 @@ public class OcvFilterCustom implements ComplexFilter {
 
     boolean useRegex;
 
-    private List<FiltersValues> communitiesFilter;
     private List<FiltersValues> nodesFilter;
     private List<FiltersValues> aristasFilter;
     private OptionsFilter optionsFilter;
-    private OptionsFilter optionsFilterCommunity;
     private OptionsFilter optionsFilterEdge;
 
     //private int cantFilter;
@@ -37,7 +35,7 @@ public class OcvFilterCustom implements ComplexFilter {
 
     @Override
     public String getName() {
-        return "Overlapping Communities Viewer Filter";
+        return "Overlapping Communities Viewer Filter Node";
     }
 
     @Override
@@ -61,31 +59,10 @@ public class OcvFilterCustom implements ComplexFilter {
 
     @Override
     public Graph filter(Graph graph) {
-        if (communitiesFilter.isEmpty() && nodesFilter.isEmpty() && aristasFilter.isEmpty()) {
+        if (nodesFilter.isEmpty() && aristasFilter.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No hay filtros por aplicar", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
             Node[] nodes = graph.getNodes().toArray();
-            
-            //comunidades
-            if(communitiesFilter.get(0).getId() == 3 && communitiesFilter.get(1).getId() == 3){
-            
-            } else {
-                for (Node node : nodes) {
-                    if((boolean)node.getAttribute("iscommunity")){
-                        boolean deleteCommunityMoreNode = false;
-                        boolean deleteCommunityLessNode = false;
-                        if(optionsFilterCommunity.getOption1() == 1){
-                            deleteCommunityMoreNode = conMasDeNumNodos(graph, node);
-                        }
-                        if(optionsFilterCommunity.getOption2() == 1){
-                            deleteCommunityLessNode = conMenosDeNumNodos(graph, node);
-                        }
-                        if(deleteCommunityMoreNode == true || deleteCommunityLessNode == true){
-                            graph.removeNode(node);
-                        }
-                    }
-                }
-            }
 
             //nodos
             if (!nodesFilter.isEmpty()) {
@@ -95,22 +72,21 @@ public class OcvFilterCustom implements ComplexFilter {
                     boolean deleteMasComunidades = false;
                     boolean deleteMenosComunidades = false;
                     
-                    if(!(boolean)node.getAttribute("iscommunity")){
-                        if (optionsFilter.getOption1() == 1) {
-                            deleteTags = this.conTags(node);
-                        }
-                        if (optionsFilter.getOption2() == 1) {
-                            deleteSinTags = this.sinTags(node);
-                        }
-                        if (optionsFilter.getOption3() == 1) {
-                            deleteMasComunidades = this.conMasComunidades(node);
-                        }
-                        if (optionsFilter.getOption4() == 1) {
-                            deleteMenosComunidades = this.conMenosComunidades(node);
-                        }
-                        if (deleteTags == true || deleteSinTags == true || deleteMasComunidades == true || deleteMenosComunidades == true) {
-                            graph.removeNode(node);
-                        }
+                    
+                    if (optionsFilter.getOption1() == 1) {
+                        deleteTags = this.conTags(node);
+                    }
+                    if (optionsFilter.getOption2() == 1) {
+                        deleteSinTags = this.sinTags(node);
+                    }
+                    if (optionsFilter.getOption3() == 1) {
+                        deleteMasComunidades = this.conMasComunidades(node);
+                    }
+                    if (optionsFilter.getOption4() == 1) {
+                        deleteMenosComunidades = this.conMenosComunidades(node);
+                    }
+                    if (deleteTags == true || deleteSinTags == true || deleteMasComunidades == true || deleteMenosComunidades == true) {
+                        graph.removeNode(node);
                     }
                 }
             }
@@ -133,33 +109,6 @@ public class OcvFilterCustom implements ComplexFilter {
         }
         }
         return graph;
-    }
-
-    //COMUNIDADES
-    public boolean conMasDeNumNodos(Graph graph, Node node){
-        boolean delete = true;
-        //comunidades con mas de N nodos
-        if (communitiesFilter.get(0).getId() == 0) {
-            int numNodesPerCommunities = graph.getEdges(node).toArray().length;
-            int valueCompare = Integer.parseInt(communitiesFilter.get(0).getValue());
-            if (valueCompare <= numNodesPerCommunities) {
-                delete = false;
-            }    
-        }
-        return delete;
-    }
-    
-    public boolean conMenosDeNumNodos(Graph graph, Node node){
-        boolean delete = true;
-         //comunidades con mas de N nodos
-        if (communitiesFilter.get(1).getId() == 1) {
-            int numNodesPerCommunities = graph.getEdges(node).toArray().length;
-            int valueCompare = Integer.parseInt(communitiesFilter.get(1).getValue());
-            if (valueCompare > numNodesPerCommunities) {
-                delete = false;
-            }    
-        }
-        return delete;
     }
     
     //NODOS
@@ -269,20 +218,6 @@ public class OcvFilterCustom implements ComplexFilter {
         }
         return delete;
     }
-    
-    /**
-     * @return the communitiesFilter
-     */
-    public List<FiltersValues> getCommunitiesFilter() {
-        return communitiesFilter;
-    }
-
-    /**
-     * @param communitiesFilter the communitiesFilter to set
-     */
-    public void setCommunitiesFilter(List<FiltersValues> communitiesFilter) {
-        this.communitiesFilter = communitiesFilter;
-    }
 
     /**
      * @return the nodesFilter
@@ -324,20 +259,6 @@ public class OcvFilterCustom implements ComplexFilter {
      */
     public void setOptionsFilter(OptionsFilter optionsFilter) {
         this.optionsFilter = optionsFilter;
-    }
-
-    /**
-     * @return the optionsFilterCommunity
-     */
-    public OptionsFilter getOptionsFilterCommunity() {
-        return optionsFilterCommunity;
-    }
-
-    /**
-     * @param optionsFilterCommunity the optionsFilterCommunity to set
-     */
-    public void setOptionsFilterCommunity(OptionsFilter optionsFilterCommunity) {
-        this.optionsFilterCommunity = optionsFilterCommunity;
     }
 
     /**

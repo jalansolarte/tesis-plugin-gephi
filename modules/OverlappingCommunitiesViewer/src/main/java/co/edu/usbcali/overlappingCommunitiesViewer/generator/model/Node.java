@@ -15,16 +15,24 @@ import org.gephi.io.importer.api.NodeDraft;
  */
 public class Node {
     private String id;
-    private List<NodeDraft> communities;
+    private List<NodeDraft> communitiesAsNodes;
+    private List<Community> communitiesAsProperty;
 
     public Node(String id){
         this.id = id;
-        communities = new ArrayList<NodeDraft>();
+        communitiesAsNodes = new ArrayList<>();
+        communitiesAsProperty = new ArrayList<>();
     }
     
     public void addCommunity(NodeDraft community){
-        if(!communities.contains(community)){
-            communities.add(community);
+        if(!communitiesAsNodes.contains(community)){
+            communitiesAsNodes.add(community);
+        }
+    }
+    
+    public void addCommunity(Community community){
+        if(!communitiesAsProperty.contains(community)){
+            communitiesAsProperty.add(community);
         }
     }
     
@@ -36,13 +44,11 @@ public class Node {
         this.id = id;
     }
 
-    public List<NodeDraft> getCommunities() {
-        return communities;
-    }
-
-    public void setCommunities(List<NodeDraft> communities) {
-        this.communities = communities;
+    public List<NodeDraft> getCommunitiesAsNodes() {
+        return communitiesAsNodes;
     }
     
-    
+    public List<Community> getCommunitiesAsProperty() {
+        return communitiesAsProperty;
+    }
 }
